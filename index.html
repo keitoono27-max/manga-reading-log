@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <title>漫画読破履歴</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <style>
+    :root{
+      --bg:#101010;
+      --panel:#181818;
+      --panel-2:#222;
+      --line:#2b2b2b;
+      --text:#f5f5f5;
+      --muted:#a3a3a3;
+      --weak:#6f6f6f;
+      --pink:#ff4b88;
+      --red:#ff4d57;
+      --green:#08cf52;
+      --yellow:#ffe16a;
+      --shadow: 0 18px 40px rgba(0,0,0,.35);
+      --radius:22px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;}
+    body{padding-bottom:calc(88px + var(--safe-bottom));}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer;border:0}
+    .app{max-width:920px;margin:0 auto;padding:18px 16px 0;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:linear-gradient(180deg,#101010 76%,rgba(16,16,16,0));z-index:10;padding:14px 0 18px;}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--pink),#ff9a4b);display:grid;place-items:center;font-weight:900;box-shadow:0 10px 25px rgba(255,75,136,.25);}
+    h1{font-size:clamp(24px,5vw,36px);margin:0;letter-spacing:.02em;line-height:1.05;white-space:nowrap;}
+    .sub{color:var(--muted);font-size:12px;margin-top:4px;}
+    .ghost-btn,.primary-btn,.mini-btn,.danger-btn{border-radius:999px;padding:11px 15px;font-weight:800;transition:.16s transform,.16s opacity;background:var(--panel-2);color:var(--text);}
+    .ghost-btn:active,.primary-btn:active,.mini-btn:active,.danger-btn:active{transform:scale(.98)}
+    .primary-btn{background:var(--green);color:white;box-shadow:0 8px 24px rgba(8,207,82,.25)}
+    .danger-btn{background:#3a171a;color:#ffb3b8}
+    .mini-btn{padding:8px 11px;font-size:12px;background:#2a2a2a;color:#ddd;}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px;}
+    @media(min-width:780px){.grid{grid-template-columns:1.05fr .95fr}.work-grid{grid-template-columns:1fr 1fr}}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#191919,#171717 50%,#24131c);}
+    .hero:before{content:"";position:absolute;inset:-60px -80px auto auto;width:210px;height:210px;border-radius:50%;background:rgba(255,75,136,.18);filter:blur(6px)}
+    .hero-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;}
+    .name-input{width:100%;background:#101010;color:white;border:1px solid #333;border-radius:14px;padding:12px 13px;outline:none;margin-top:10px;}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px;}
+    .stat{background:#111;border:1px solid #2d2d2d;border-radius:17px;padding:12px;min-height:76px;}
+    .stat strong{font-size:24px;display:block;line-height:1}.stat span{font-size:11px;color:var(--muted);display:block;margin-top:7px;line-height:1.35}
+    .stamp-card{display:flex;align-items:center;gap:12px;margin-top:13px;background:#111;border:1px solid #313131;border-radius:18px;padding:12px;}
+    .stamp-icon{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#ffd66d,#ff7aa6);display:grid;place-items:center;font-size:26px;}
+    .week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:14px;}
+    .day{background:#111;border:1px solid #303030;border-radius:14px;padding:9px 4px;text-align:center;min-height:78px;display:flex;flex-direction:column;justify-content:space-between;}
+    .day .dow{font-size:11px;color:var(--muted)}.day .num{font-weight:900}.day .count{font-size:11px;color:#fff;background:#333;border-radius:999px;padding:4px 0}.day.today{border-color:var(--green)}
+    .flower-wrap{display:flex;gap:16px;align-items:center;}
+    .flower{width:104px;height:104px;position:relative;flex:0 0 auto;display:grid;place-items:center;}
+    .petal{position:absolute;width:38px;height:56px;border-radius:38px 38px 16px 16px;background:linear-gradient(#ff80ab,#ff4b88);transform-origin:50% 74%;opacity:.95;}
+    .petal:nth-child(1){transform:rotate(0deg) translateY(-24px)}.petal:nth-child(2){transform:rotate(60deg) translateY(-24px)}.petal:nth-child(3){transform:rotate(120deg) translateY(-24px)}.petal:nth-child(4){transform:rotate(180deg) translateY(-24px)}.petal:nth-child(5){transform:rotate(240deg) translateY(-24px)}.petal:nth-child(6){transform:rotate(300deg) translateY(-24px)}
+    .core{position:absolute;width:42px;height:42px;border-radius:50%;background:var(--yellow);box-shadow:inset 0 -4px 0 rgba(0,0,0,.08);z-index:2}.stem{position:absolute;width:7px;height:62px;background:#36b76b;border-radius:999px;bottom:-28px;z-index:0}.leaf{position:absolute;width:34px;height:18px;background:#26a75c;border-radius:100% 0 100% 0;bottom:10px;right:20px;transform:rotate(-15deg)}
+    .progress{height:12px;background:#111;border:1px solid #333;border-radius:999px;overflow:hidden;margin:8px 0;}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),#87ff95);border-radius:999px;transition:.35s width;}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 12px;}.section-title h2{font-size:20px;margin:0}.section-title small{color:var(--muted)}
+    .toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 13px}.search{flex:1 1 220px;background:#151515;border:1px solid #333;color:white;border-radius:999px;padding:12px 15px;outline:none;}
+    .pink-banner{background:linear-gradient(90deg,#ff4b92,#ff6274);color:white;border-radius:6px;text-align:center;font-weight:900;padding:14px 10px;box-shadow:0 12px 28px rgba(255,75,136,.18);margin-bottom:12px;}
+    .work-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+    .work-card{background:#151515;border:1px solid #2c2c2c;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
+    .work-head{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:14px;}
+    .cover{width:96px;height:138px;border-radius:6px;background:#2b2b2b;border:1px solid #444;object-fit:cover;display:block;}
+    .cover.empty{display:grid;place-items:center;color:#777;font-size:12px;text-align:center;padding:8px;}
+    .work-title{font-size:24px;font-weight:900;line-height:1.15;margin:0 0 8px;word-break:break-word}.genre{font-weight:800;color:#ddd;margin-bottom:8px}.meta{color:#a5a5a5;font-weight:700;font-size:14px;line-height:1.6}.heart{color:var(--red);font-size:14px}.tag{display:inline-flex;align-items:center;gap:5px;background:#2d2d2d;color:#dedede;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800;margin:3px 4px 0 0}.tag.done{background:rgba(8,207,82,.14);color:#79ffa9}.tag.wip{background:rgba(255,225,106,.12);color:#ffe58d}
+    .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.episode-list{border-top:1px solid #282828;}.episode{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid #262626;}.episode-thumb{width:54px;height:54px;border-radius:4px;background:#333;object-fit:cover}.episode-main{min-width:0}.episode-title{font-size:17px;font-weight:900;margin-bottom:4px}.episode-note{font-size:12px;color:#888;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.free{color:#ff5863;font-weight:900;font-size:13px}.read-badge{color:#34f77a;font-weight:900;font-size:12px}.all-episodes{margin:14px;background:#3a3a3a;border-radius:5px;padding:14px;text-align:center;font-size:18px;font-weight:900}.empty-state{text-align:center;color:var(--muted);padding:26px 16px;border:1px dashed #444;border-radius:18px;background:#141414;}
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#050505;border-top:1px solid #222;padding:10px 16px calc(10px + var(--safe-bottom));z-index:30;}.bottom-nav-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav-item{text-align:center;color:#efefef;font-size:11px;font-weight:800}.nav-ico{width:32px;height:32px;border-radius:50%;background:#fff;color:#000;margin:0 auto 4px;display:grid;place-items:center;font-size:16px}.nav-item:nth-child(n+2) .nav-ico{background:transparent;color:white;border:2px solid white;border-radius:8px}
+    dialog{border:0;border-radius:24px;padding:0;background:#151515;color:white;box-shadow:0 28px 80px rgba(0,0,0,.7);width:min(720px,calc(100vw - 24px));max-height:90dvh;overflow:auto;}dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}.modal{padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #2a2a2a;padding-bottom:12px;margin-bottom:14px}.modal h3{font-size:22px;margin:0}.form-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:680px){.form-grid.two{grid-template-columns:1fr 1fr}.form-grid.three{grid-template-columns:1fr 1fr 1fr}}label{font-size:12px;color:#bbb;font-weight:800;display:block;margin:0 0 7px}.field{background:#101010;border:1px solid #333;border-radius:14px;color:white;padding:12px;width:100%;outline:none}.field:focus{border-color:#666}textarea.field{min-height:92px;resize:vertical}.hint{font-size:11px;color:#858585;line-height:1.5;margin-top:6px}.form-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:16px}.episode-editor{background:#111;border:1px solid #303030;border-radius:16px;padding:12px;margin-top:10px}.episode-editor summary{font-weight:900;cursor:pointer}.episode-editor-body{padding-top:12px}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toast{position:fixed;left:50%;bottom:calc(92px + var(--safe-bottom));transform:translateX(-50%) translateY(20px);background:#fff;color:#111;font-weight:900;padding:13px 18px;border-radius:999px;box-shadow:0 16px 36px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.25s;z-index:60}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.petal-rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:55}.falling-petal{position:absolute;top:-60px;width:24px;height:34px;border-radius:24px 24px 9px 9px;background:linear-gradient(#ff91ba,#ff4b88);animation:fall linear forwards;}@keyframes fall{to{transform:translateY(110vh) rotate(680deg);opacity:.05}}
+    .analysis-block{background:#101010;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 14px 14px}.analysis-block h4{margin:0 0 8px}.analysis-block p{margin:7px 0;color:#ddd;font-size:13px;line-height:1.65}.hidden{display:none!important}.small-muted{font-size:12px;color:var(--muted);line-height:1.5}.linkish{color:#9ae9ff;text-decoration:underline;background:none;padding:0;border-radius:0}.file-label{display:inline-flex;align-items:center;justify-content:center;background:#2a2a2a;border-radius:12px;padding:11px 13px;color:white;font-weight:800;cursor:pointer}.file-label input{display:none}.import-input{display:none}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">読</div>
+        <div>
+          <h1>漫画読破履歴</h1>
+          <div class="sub">読んだ日・感想・好き嫌いを、就活で語れる強みにするログ</div>
+        </div>
+      </div>
+      <button class="primary-btn" id="openWorkModal">＋作品</button>
+    </header>
+
+    <main>
+      <div class="grid">
+        <section class="panel hero">
+          <div class="hero-row">
+            <div>
+              <div class="small-muted">ユーザー名</div>
+              <input class="name-input" id="profileName" placeholder="例：Keito / あおはる" />
+            </div>
+            <button class="ghost-btn" id="stampNow">今日のスタンプ</button>
+          </div>
+          <div class="stats">
+            <div class="stat"><strong id="completedCount">0</strong><span>読破済み作品</span></div>
+            <div class="stat"><strong id="weeklyCount">0</strong><span>今週読んだ話数</span></div>
+            <div class="stat"><strong id="stampCount">0</strong><span>ログインスタンプ</span></div>
+          </div>
+          <div class="stamp-card">
+            <div class="stamp-icon" id="stampIcon">🌙</div>
+            <div>
+              <strong id="stampText">今日も記録しよ</strong>
+              <div class="small-muted" id="stampSub">アクセスした日を自動でスタンプ化します。</div>
+            </div>
+          </div>
+          <div class="week" id="weekView"></div>
+        </section>
+
+        <section class="panel">
+          <div class="flower-wrap">
+            <div class="flower" aria-hidden="true">
+              <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+              <div class="stem"></div><div class="leaf"></div><div class="core"></div>
+            </div>
+            <div style="min-width:0;flex:1">
+              <h2 style="margin:0 0 5px;font-size:20px;">10作品ごとに花が散る</h2>
+              <div class="small-muted" id="flowerText">あと10作品で花びらが散ります。</div>
+              <div class="progress"><div class="bar" id="flowerBar"></div></div>
+              <div class="small-muted">読破済みにしたタイミングで花びら演出が出ます。</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+            <button class="mini-btn" id="exportBtn">データを書き出す</button>
+            <label class="mini-btn" for="importFile" style="cursor:pointer;">データを読み込む</label>
+            <input id="importFile" class="import-input" type="file" accept="application/json" />
+            <button class="mini-btn" id="sampleBtn">サンプル投入</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="section-title">
+        <h2>本棚</h2>
+        <small id="workSummary">0作品</small>
+      </div>
+      <div class="toolbar">
+        <input id="searchInput" class="search" placeholder="作品名・ジャンル・感想で検索" />
+        <select id="statusFilter" class="field" style="width:auto;border-radius:999px;">
+          <option value="all">すべて</option>
+          <option value="done">読破済み</option>
+          <option value="wip">途中</option>
+          <option value="finished">完結</option>
+          <option value="ongoing">連載中</option>
+        </select>
+      </div>
+      <div class="pink-banner">まだ読んでいないの！？ 定番webtoon 100選！ ›</div>
+      <div id="works" class="work-grid"></div>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="アプリ内メニュー">
+    <div class="bottom-nav-inner">
+      <button class="nav-item" id="navTop"><div class="nav-ico">★</div>おすすめ</button>
+      <button class="nav-item" id="navSearch"><div class="nav-ico">⌕</div>探す</button>
+      <button class="nav-item" id="navAdd"><div class="nav-ico">＋</div>追加</button>
+      <button class="nav-item" id="navExport"><div class="nav-ico">本</div>保存</button>
+    </div>
+  </nav>
+
+  <dialog id="workModal">
+    <form class="modal" id="workForm" method="dialog">
+      <div class="modal-head">
+        <h3 id="modalTitle">作品を追加</h3>
+        <button class="ghost-btn" type="button" id="closeModal">閉じる</button>
+      </div>
+      <input type="hidden" id="editingId" />
+      <div class="form-grid two">
+        <div>
+          <label>タイトル</label>
+          <input class="field" id="titleInput" required placeholder="例：オークの樹の下" />
+        </div>
+        <div>
+          <label>ジャンル</label>
+          <input class="field" id="genreInput" placeholder="例：ファンタジー・SF / 恋愛 / BL" />
+        </div>
+      </div>
+      <div class="form-grid three" style="margin-top:12px;">
+        <div>
+          <label>全何話？</label>
+          <input class="field" id="totalInput" type="number" min="1" max="999" value="1" />
+        </div>
+        <div>
+          <label>完結の有無</label>
+          <select class="field" id="finishedInput">
+            <option value="ongoing">連載中・未完結</option>
+            <option value="finished">完結</option>
+            <option value="unknown">不明</option>
+          </select>
+        </div>
+        <div>
+          <label>読破状態</label>
+          <select class="field" id="readStatusInput">
+            <option value="wip">途中</option>
+            <option value="done">読破済み</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <label>表紙画像</label>
+        <label class="file-label">画像を選ぶ<input id="coverInput" type="file" accept="image/*" /></label>
+        <span class="small-muted" id="coverHint">未選択なら空白の表紙になります。</span>
+      </div>
+      <div class="form-grid two" style="margin-top:12px;">
+        <div>
+          <label>一言でいうと？</label>
+          <input class="field" id="oneLineInput" placeholder="例：不器用な愛が刺さる宮廷ロマンス" />
+        </div>
+        <div>
+          <label>就活で語れる気づき</label>
+          <input class="field" id="insightInput" placeholder="例：序盤の引きが強い / 読者課金導線がうまい" />
+        </div>
+      </div>
+      <div class="form-grid two" style="margin-top:12px;">
+        <div>
+          <label>面白かった点</label>
+          <textarea class="field" id="goodInput" placeholder="キャラ、展開、絵、課金したくなる理由など"></textarea>
+        </div>
+        <div>
+          <label>合わなかった点・改善案</label>
+          <textarea class="field" id="badInput" placeholder="テンポ、見せ方、説明量、離脱しそうな点など"></textarea>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="modal-head" style="border:0;padding:0;margin:0 0 8px;">
+          <div>
+            <label style="margin:0;color:#fff;font-size:14px;">各話感想</label>
+            <div class="hint">全話数に合わせて 1話、2話、3話… が自動で作られます。</div>
+          </div>
+          <button class="mini-btn" type="button" id="buildEpisodes">話数を反映</button>
+        </div>
+        <div id="episodeEditors"></div>
+      </div>
+      <div class="form-actions">
+        <button class="danger-btn" id="deleteWork" type="button">削除</button>
+        <button class="ghost-btn" type="button" id="markDoneBtn">読破済みにする</button>
+        <button class="primary-btn" type="submit">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast">保存しました</div>
+  <div class="petal-rain" id="petalRain"></div>
+
+  <script>
+    const STORAGE_KEY = 'manga-reading-log-v1';
+    const $ = (id) => document.getElementById(id);
+    const todayStr = () => new Date().toISOString().slice(0,10);
+    const uid = () => 'w_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+    const defaultState = () => ({ profileName:'', stampDates:[], works:[], lastMilestone:0 });
+    let state = load();
+    let tempCover = null;
+
+    function load(){
+      try { return { ...defaultState(), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; }
+      catch(e){ return defaultState(); }
+    }
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); render(); }
+    function showToast(text='保存しました'){
+      const t=$('toast'); t.textContent=text; t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),1800);
+    }
+    function escapeHtml(str=''){
+      return String(str).replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
+    }
+    function fmtDate(s){
+      if(!s) return '';
+      const d = new Date(s + 'T00:00:00');
+      return `${d.getMonth()+1}/${d.getDate()}`;
+    }
+    function weekDates(){
+      const now = new Date();
+      const day = now.getDay();
+      const start = new Date(now); start.setDate(now.getDate() - day);
+      return Array.from({length:7},(_,i)=>{ const d=new Date(start); d.setDate(start.getDate()+i); return d; });
+    }
+    function episodeReadDates(){
+      return state.works.flatMap(w => (w.episodes || []).filter(e=>e.readDate).map(e=>e.readDate));
+    }
+    function countReadsOn(dateStr){ return episodeReadDates().filter(d=>d===dateStr).length; }
+    function completedWorks(){ return state.works.filter(w => w.readStatus === 'done' || !!w.completedAt); }
+    function ensureStamp(){
+      const today = todayStr();
+      if(!state.stampDates.includes(today)){
+        state.stampDates.push(today);
+        state.stampDates = [...new Set(state.stampDates)].sort();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+    }
+    function render(){
+      $('profileName').value = state.profileName || '';
+      const doneCount = completedWorks().length;
+      $('completedCount').textContent = doneCount;
+      $('stampCount').textContent = state.stampDates.length;
+      const dates = weekDates().map(d=>d.toISOString().slice(0,10));
+      const weekly = episodeReadDates().filter(d=>dates.includes(d)).length;
+      $('weeklyCount').textContent = weekly;
+      $('stampText').textContent = state.stampDates.includes(todayStr()) ? '今日のスタンプ獲得済み' : '今日のスタンプを押そう';
+      $('stampSub').textContent = state.stampDates.includes(todayStr()) ? `${fmtDate(todayStr())} に記録済み。継続えらい。` : 'ボタンを押すか、アプリを開くと今日分がつきます。';
+      $('stampIcon').textContent = state.stampDates.includes(todayStr()) ? '🌸' : '🌙';
+      renderWeek();
+      renderFlower(doneCount);
+      renderWorks();
+    }
+    function renderWeek(){
+      const dows = ['日','月','火','水','木','金','土'];
+      const today = todayStr();
+      $('weekView').innerHTML = weekDates().map(d=>{
+        const s = d.toISOString().slice(0,10);
+        const c = countReadsOn(s);
+        return `<div class="day ${s===today?'today':''}"><div class="dow">${dows[d.getDay()]}</div><div class="num">${d.getDate()}</div><div class="count">${c}話</div></div>`;
+      }).join('');
+    }
+    function renderFlower(doneCount){
+      const mod = doneCount % 10;
+      const remain = mod === 0 && doneCount > 0 ? 10 : 10 - mod;
+      $('flowerBar').style.width = `${(mod/10)*100}%`;
+      if(doneCount === 0){
+        $('flowerText').textContent = 'あと10作品で花びらが散ります。';
+      } else if(mod === 0){
+        $('flowerText').textContent = `${doneCount}作品読破。次の花まであと10作品。`;
+      } else {
+        $('flowerText').textContent = `次の花まであと${remain}作品。現在${doneCount}作品読破。`;
+      }
+    }
+    function filteredWorks(){
+      const q = $('searchInput')?.value?.trim().toLowerCase() || '';
+      const status = $('statusFilter')?.value || 'all';
+      return state.works.filter(w => {
+        const hay = [w.title,w.genre,w.oneLine,w.insight,w.good,w.bad,...(w.episodes||[]).map(e=>e.note)].join(' ').toLowerCase();
+        const okQ = !q || hay.includes(q);
+        const okS = status === 'all' ||
+          (status === 'done' && w.readStatus === 'done') ||
+          (status === 'wip' && w.readStatus !== 'done') ||
+          (status === 'finished' && w.finished === 'finished') ||
+          (status === 'ongoing' && w.finished === 'ongoing');
+        return okQ && okS;
+      }).sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
+    }
+    function coverHtml(w, cls='cover'){
+      if(w.cover) return `<img class="${cls}" alt="${escapeHtml(w.title)}の表紙" src="${w.cover}">`;
+      return `<div class="${cls} empty">表紙<br>未設定</div>`;
+    }
+    function renderWorks(){
+      const list = filteredWorks();
+      $('workSummary').textContent = `${state.works.length}作品 / 表示${list.length}作品`;
+      if(!state.works.length){
+        $('works').innerHTML = `<div class="empty-state"><strong>まだ作品がありません</strong><br>＋作品から、最近読んだ漫画を1つ入れてみて。</div>`;
+        return;
+      }
+      if(!list.length){
+        $('works').innerHTML = `<div class="empty-state">検索条件に合う作品がありません。</div>`;
+        return;
+      }
+      $('works').innerHTML = list.map(w => {
+        const total = Math.max(1, Number(w.totalEpisodes || (w.episodes||[]).length || 1));
+        const read = (w.episodes||[]).filter(e=>e.readDate || e.note).length;
+        const eps = (w.episodes||[]).slice(0,6).map(e=>`
+          <div class="episode">
+            ${w.cover ? `<img class="episode-thumb" src="${w.cover}" alt="">` : `<div class="episode-thumb"></div>`}
+            <div class="episode-main">
+              <div class="episode-title">${e.number}話. (${e.number})</div>
+              <div class="episode-note">${e.note ? escapeHtml(e.note) : '感想未入力'} ${e.readDate ? '・' + fmtDate(e.readDate) : ''}</div>
+            </div>
+            <div>${e.readDate ? '<span class="read-badge">記録済</span>' : '<span class="free">未読</span>'}</div>
+          </div>`).join('');
+        return `<article class="work-card">
+          <div class="work-head">
+            ${coverHtml(w)}
+            <div>
+              <h3 class="work-title">${escapeHtml(w.title || '無題')}</h3>
+              <div class="genre">${escapeHtml(w.genre || 'ジャンル未設定')}</div>
+              <div class="meta"><span class="heart">♥</span> ${read.toLocaleString()} / ${total.toLocaleString()}話 記録</div>
+              <span class="tag ${w.readStatus === 'done' ? 'done':'wip'}">${w.readStatus === 'done' ? '読破済み':'途中'}</span>
+              <span class="tag">${w.finished === 'finished' ? '完結' : w.finished === 'ongoing' ? '連載中' : '不明'}</span>
+              ${w.insight ? `<span class="tag">気づきあり</span>`:''}
+              <div class="card-actions">
+                <button class="mini-btn" data-action="edit" data-id="${w.id}">編集・感想追加</button>
+                <button class="mini-btn" data-action="quickread" data-id="${w.id}">今日読んだ話を記録</button>
+              </div>
+            </div>
+          </div>
+          <div class="episode-list">${eps || ''}</div>
+          <div class="all-episodes">全${total}話 ›</div>
+          ${(w.oneLine||w.insight||w.good||w.bad) ? `<div class="analysis-block">
+            <h4>作品メモ</h4>
+            ${w.oneLine ? `<p><strong>一言：</strong>${escapeHtml(w.oneLine)}</p>`:''}
+            ${w.insight ? `<p><strong>就活で語れる気づき：</strong>${escapeHtml(w.insight)}</p>`:''}
+            ${w.good ? `<p><strong>面白かった点：</strong>${escapeHtml(w.good)}</p>`:''}
+            ${w.bad ? `<p><strong>合わなかった点・改善案：</strong>${escapeHtml(w.bad)}</p>`:''}
+          </div>`:''}
+        </article>`;
+      }).join('');
+    }
+    function openModal(work=null){
+      tempCover = null;
+      $('workForm').reset();
+      $('editingId').value = work?.id || '';
+      $('modalTitle').textContent = work ? '作品を編集' : '作品を追加';
+      $('titleInput').value = work?.title || '';
+      $('genreInput').value = work?.genre || '';
+      $('totalInput').value = work?.totalEpisodes || 1;
+      $('finishedInput').value = work?.finished || 'ongoing';
+      $('readStatusInput').value = work?.readStatus || 'wip';
+      $('oneLineInput').value = work?.oneLine || '';
+      $('insightInput').value = work?.insight || '';
+      $('goodInput').value = work?.good || '';
+      $('badInput').value = work?.bad || '';
+      $('deleteWork').classList.toggle('hidden', !work);
+      $('markDoneBtn').textContent = work?.readStatus === 'done' ? '途中に戻す' : '読破済みにする';
+      $('coverHint').textContent = work?.cover ? '現在の表紙あり。変更する場合だけ選択。' : '未選択なら空白の表紙になります。';
+      buildEpisodeEditors(work?.episodes || [], Number(work?.totalEpisodes || 1));
+      $('workModal').showModal();
+    }
+    function buildEpisodeEditors(existing=[], total=null){
+      const n = Math.max(1, Math.min(999, Number(total ?? ($('totalInput').value || 1))));
+      const map = new Map(existing.map(e=>[Number(e.number), e]));
+      const html = Array.from({length:n},(_,i)=>{
+        const no = i+1; const e = map.get(no) || {number:no,note:'',readDate:''};
+        return `<details class="episode-editor" ${no<=3?'open':''}>
+          <summary>${no}話. (${no})</summary>
+          <div class="episode-editor-body">
+            <div class="date-row">
+              <div><label>読んだ日</label><input class="field ep-date" data-no="${no}" type="date" value="${escapeHtml(e.readDate||'')}"></div>
+              <div><label>ひとことタグ</label><input class="field ep-tag" data-no="${no}" value="${escapeHtml(e.tag||'')}" placeholder="例：引きが強い"></div>
+            </div>
+            <div style="margin-top:10px;"><label>感想・分析</label><textarea class="field ep-note" data-no="${no}" placeholder="この話で面白かった点、離脱しそうな点、構成の気づきなど">${escapeHtml(e.note||'')}</textarea></div>
+          </div>
+        </details>`;
+      }).join('');
+      $('episodeEditors').innerHTML = html;
+    }
+    function collectEpisodes(old=[]){
+      const n = Math.max(1, Number($('totalInput').value || 1));
+      const oldMap = new Map(old.map(e=>[Number(e.number),e]));
+      return Array.from({length:n},(_,i)=>{
+        const no = i+1;
+        return {
+          ...(oldMap.get(no)||{}),
+          number:no,
+          readDate: document.querySelector(`.ep-date[data-no="${no}"]`)?.value || '',
+          tag: document.querySelector(`.ep-tag[data-no="${no}"]`)?.value || '',
+          note: document.querySelector(`.ep-note[data-no="${no}"]`)?.value || ''
+        };
+      });
+    }
+    async function resizeImage(file){
+      const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+      const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
+      const maxW=520, maxH=780; let {width:w,height:h}=img;
+      const scale = Math.min(1,maxW/w,maxH/h); w=Math.round(w*scale); h=Math.round(h*scale);
+      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+      return canvas.toDataURL('image/jpeg',0.82);
+    }
+    function saveWork(e){
+      e.preventDefault();
+      const id = $('editingId').value || uid();
+      const old = state.works.find(w=>w.id===id);
+      const beforeDone = completedWorks().length;
+      const readStatus = $('readStatusInput').value;
+      const work = {
+        ...(old||{}), id,
+        title:$('titleInput').value.trim() || '無題',
+        genre:$('genreInput').value.trim(),
+        totalEpisodes:Number($('totalInput').value || 1),
+        finished:$('finishedInput').value,
+        readStatus,
+        cover: tempCover || old?.cover || '',
+        oneLine:$('oneLineInput').value.trim(),
+        insight:$('insightInput').value.trim(),
+        good:$('goodInput').value.trim(),
+        bad:$('badInput').value.trim(),
+        episodes: collectEpisodes(old?.episodes || []),
+        createdAt: old?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        completedAt: readStatus === 'done' ? (old?.completedAt || todayStr()) : ''
+      };
+      const idx = state.works.findIndex(w=>w.id===id);
+      if(idx>=0) state.works[idx]=work; else state.works.unshift(work);
+      $('workModal').close();
+      save();
+      showToast('作品を保存しました');
+      const afterDone = completedWorks().length;
+      checkMilestone(beforeDone, afterDone);
+    }
+    function checkMilestone(before, after){
+      const beforeM = Math.floor(before/10);
+      const afterM = Math.floor(after/10);
+      if(after>0 && afterM>beforeM && after % 10 === 0){
+        petalRain();
+        showToast(`${after}作品読破！花が散りました🌸`);
+      }
+    }
+    function petalRain(){
+      const area=$('petalRain'); area.innerHTML='';
+      for(let i=0;i<46;i++){
+        const p=document.createElement('div');
+        p.className='falling-petal';
+        p.style.left = Math.random()*100 + 'vw';
+        p.style.animationDuration = (3 + Math.random()*3.4) + 's';
+        p.style.animationDelay = (Math.random()*0.8) + 's';
+        p.style.opacity = .55 + Math.random()*0.45;
+        area.appendChild(p);
+      }
+      setTimeout(()=>area.innerHTML='',7200);
+    }
+    function deleteCurrent(){
+      const id=$('editingId').value; if(!id) return;
+      if(confirm('この作品を削除しますか？')){
+        state.works = state.works.filter(w=>w.id!==id);
+        $('workModal').close(); save(); showToast('削除しました');
+      }
+    }
+    function toggleDoneInModal(){
+      $('readStatusInput').value = $('readStatusInput').value === 'done' ? 'wip' : 'done';
+      $('markDoneBtn').textContent = $('readStatusInput').value === 'done' ? '途中に戻す' : '読破済みにする';
+    }
+    function quickRead(id){
+      const w = state.works.find(x=>x.id===id); if(!w) return;
+      const ep = (w.episodes||[]).find(e=>!e.readDate);
+      if(ep){ ep.readDate = todayStr(); ep.note = ep.note || '今日読んだ'; }
+      else {
+        const next = (w.episodes||[]).length + 1;
+        w.episodes.push({number:next, readDate:todayStr(), note:'今日読んだ', tag:''});
+        w.totalEpisodes = Math.max(Number(w.totalEpisodes||0), next);
+      }
+      w.updatedAt = new Date().toISOString();
+      save(); showToast('今日読んだ話を記録しました');
+    }
+    function exportData(){
+      const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href=url; a.download=`manga-reading-log-${todayStr()}.json`; a.click();
+      URL.revokeObjectURL(url);
+    }
+    function sampleData(){
+      if(state.works.length && !confirm('サンプル作品を追加しますか？')) return;
+      const id=uid();
+      state.works.unshift({
+        id,title:'オークの樹の下',genre:'ファンタジー・SF',cover:'',totalEpisodes:6,finished:'ongoing',readStatus:'wip',
+        oneLine:'身分差と不器用な愛を、縦スクロールの視線誘導で読ませる作品。',
+        insight:'序盤で主人公の弱さと相手の強さを対比し、感情移入と課金動機を作っている。',
+        good:'表情の寄り、沈黙、間の使い方が強く、読者が続きを見たくなる。',bad:'説明が多い場面は少し重いので、画で見せる回との緩急が鍵。',
+        episodes:[1,2,3,4,5,6].map(n=>({number:n,readDate:n<=2?todayStr():'',tag:n===1?'導入':n===2?'感情移入':'',note:n===1?'主人公の置かれた状況がすぐ分かる。':' ' })),
+        createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),completedAt:''
+      });
+      save(); showToast('サンプルを追加しました');
+    }
+
+    $('profileName').addEventListener('change', e=>{ state.profileName=e.target.value.trim(); save(); showToast('名前を保存しました'); });
+    $('stampNow').addEventListener('click', ()=>{ ensureStamp(); render(); showToast('スタンプ獲得！'); });
+    $('openWorkModal').addEventListener('click', ()=>openModal());
+    $('closeModal').addEventListener('click', ()=>$('workModal').close());
+    $('buildEpisodes').addEventListener('click', ()=>buildEpisodeEditors(collectEpisodes(), Number($('totalInput').value||1)));
+    $('totalInput').addEventListener('change', ()=>buildEpisodeEditors(collectEpisodes(), Number($('totalInput').value||1)));
+    $('workForm').addEventListener('submit', saveWork);
+    $('deleteWork').addEventListener('click', deleteCurrent);
+    $('markDoneBtn').addEventListener('click', toggleDoneInModal);
+    $('coverInput').addEventListener('change', async e=>{
+      const file=e.target.files?.[0]; if(!file) return;
+      tempCover = await resizeImage(file);
+      $('coverHint').textContent = '表紙画像を読み込みました。保存すると反映されます。';
+    });
+    $('searchInput').addEventListener('input', renderWorks);
+    $('statusFilter').addEventListener('change', renderWorks);
+    $('works').addEventListener('click', e=>{
+      const btn = e.target.closest('button[data-action]'); if(!btn) return;
+      const id=btn.dataset.id;
+      if(btn.dataset.action==='edit') openModal(state.works.find(w=>w.id===id));
+      if(btn.dataset.action==='quickread') quickRead(id);
+    });
+    $('exportBtn').addEventListener('click', exportData);
+    $('navExport').addEventListener('click', exportData);
+    $('sampleBtn').addEventListener('click', sampleData);
+    $('importFile').addEventListener('change', async e=>{
+      const file=e.target.files?.[0]; if(!file) return;
+      try{
+        const json=JSON.parse(await file.text());
+        state={...defaultState(),...json}; save(); showToast('読み込みました');
+      }catch(err){ alert('読み込みに失敗しました。JSONファイルを確認してください。'); }
+    });
+    $('navTop').addEventListener('click', ()=>scrollTo({top:0,behavior:'smooth'}));
+    $('navSearch').addEventListener('click', ()=>$('searchInput').focus());
+    $('navAdd').addEventListener('click', ()=>openModal());
+
+    ensureStamp();
+    render();
+    if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+  </script>
+</body>
+</html>
