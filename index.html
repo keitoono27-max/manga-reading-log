@@ -4,95 +4,93 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#111111" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="漫画読破履歴" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>漫画読破履歴</title>
   <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="icon" href="./icon-192.png" />
   <style>
     :root{
-      --bg:#101010;
-      --panel:#181818;
-      --panel-2:#222;
-      --line:#2b2b2b;
-      --text:#f5f5f5;
-      --muted:#a3a3a3;
-      --weak:#6f6f6f;
-      --pink:#ff4b88;
-      --red:#ff4d57;
-      --green:#08cf52;
-      --yellow:#ffe16a;
-      --shadow: 0 18px 40px rgba(0,0,0,.35);
-      --radius:22px;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --bg:#0e0e10;
+      --panel:#171719;
+      --panel2:#202024;
+      --text:#f7f7f7;
+      --muted:#b6b6bd;
+      --weak:#777781;
+      --line:#303039;
+      --pink:#ff4b8b;
+      --red:#ff5263;
+      --green:#08d65a;
+      --yellow:#ffe066;
+      --blue:#49b8ff;
+      --paper:#fff;
+      --ink:#111;
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --radius:24px;
     }
     *{box-sizing:border-box}
     html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;}
-    body{padding-bottom:calc(88px + var(--safe-bottom));}
+    body{padding-bottom:calc(94px + var(--safe-bottom));background:
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,.035) 1px, transparent 1.5px) 0 0/18px 18px,
+      linear-gradient(180deg,#0e0e10 0%,#111115 55%,#0d0d0f 100%);}
     button,input,textarea,select{font:inherit}
-    button{cursor:pointer;border:0}
-    .app{max-width:920px;margin:0 auto;padding:18px 16px 0;}
-    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:linear-gradient(180deg,#101010 76%,rgba(16,16,16,0));z-index:10;padding:14px 0 18px;}
+    button{border:0;cursor:pointer;color:inherit}
+    .app{max-width:960px;margin:0 auto;padding:18px 16px 0}
+    .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0 16px;background:linear-gradient(180deg,#0e0e10 75%,rgba(14,14,16,0));}
     .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .logo{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,var(--pink),#ff9a4b);display:grid;place-items:center;font-weight:900;box-shadow:0 10px 25px rgba(255,75,136,.25);}
-    h1{font-size:clamp(24px,5vw,36px);margin:0;letter-spacing:.02em;line-height:1.05;white-space:nowrap;}
-    .sub{color:var(--muted);font-size:12px;margin-top:4px;}
-    .ghost-btn,.primary-btn,.mini-btn,.danger-btn{border-radius:999px;padding:11px 15px;font-weight:800;transition:.16s transform,.16s opacity;background:var(--panel-2);color:var(--text);}
-    .ghost-btn:active,.primary-btn:active,.mini-btn:active,.danger-btn:active{transform:scale(.98)}
-    .primary-btn{background:var(--green);color:white;box-shadow:0 8px 24px rgba(8,207,82,.25)}
-    .danger-btn{background:#3a171a;color:#ffb3b8}
-    .mini-btn{padding:8px 11px;font-size:12px;background:#2a2a2a;color:#ddd;}
-    .grid{display:grid;grid-template-columns:1fr;gap:14px;}
-    @media(min-width:780px){.grid{grid-template-columns:1.05fr .95fr}.work-grid{grid-template-columns:1fr 1fr}}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
-    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#191919,#171717 50%,#24131c);}
-    .hero:before{content:"";position:absolute;inset:-60px -80px auto auto;width:210px;height:210px;border-radius:50%;background:rgba(255,75,136,.18);filter:blur(6px)}
-    .hero-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;}
-    .name-input{width:100%;background:#101010;color:white;border:1px solid #333;border-radius:14px;padding:12px 13px;outline:none;margin-top:10px;}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px;}
-    .stat{background:#111;border:1px solid #2d2d2d;border-radius:17px;padding:12px;min-height:76px;}
-    .stat strong{font-size:24px;display:block;line-height:1}.stat span{font-size:11px;color:var(--muted);display:block;margin-top:7px;line-height:1.35}
-    .stamp-card{display:flex;align-items:center;gap:12px;margin-top:13px;background:#111;border:1px solid #313131;border-radius:18px;padding:12px;}
-    .stamp-icon{width:54px;height:54px;border-radius:18px;background:linear-gradient(135deg,#ffd66d,#ff7aa6);display:grid;place-items:center;font-size:26px;}
-    .week{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;margin-top:14px;}
-    .day{background:#111;border:1px solid #303030;border-radius:14px;padding:9px 4px;text-align:center;min-height:78px;display:flex;flex-direction:column;justify-content:space-between;}
-    .day .dow{font-size:11px;color:var(--muted)}.day .num{font-weight:900}.day .count{font-size:11px;color:#fff;background:#333;border-radius:999px;padding:4px 0}.day.today{border-color:var(--green)}
-    .flower-wrap{display:flex;gap:16px;align-items:center;}
-    .flower{width:104px;height:104px;position:relative;flex:0 0 auto;display:grid;place-items:center;}
-    .petal{position:absolute;width:38px;height:56px;border-radius:38px 38px 16px 16px;background:linear-gradient(#ff80ab,#ff4b88);transform-origin:50% 74%;opacity:.95;}
-    .petal:nth-child(1){transform:rotate(0deg) translateY(-24px)}.petal:nth-child(2){transform:rotate(60deg) translateY(-24px)}.petal:nth-child(3){transform:rotate(120deg) translateY(-24px)}.petal:nth-child(4){transform:rotate(180deg) translateY(-24px)}.petal:nth-child(5){transform:rotate(240deg) translateY(-24px)}.petal:nth-child(6){transform:rotate(300deg) translateY(-24px)}
-    .core{position:absolute;width:42px;height:42px;border-radius:50%;background:var(--yellow);box-shadow:inset 0 -4px 0 rgba(0,0,0,.08);z-index:2}.stem{position:absolute;width:7px;height:62px;background:#36b76b;border-radius:999px;bottom:-28px;z-index:0}.leaf{position:absolute;width:34px;height:18px;background:#26a75c;border-radius:100% 0 100% 0;bottom:10px;right:20px;transform:rotate(-15deg)}
-    .progress{height:12px;background:#111;border:1px solid #333;border-radius:999px;overflow:hidden;margin:8px 0;}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),#87ff95);border-radius:999px;transition:.35s width;}
-    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 12px;}.section-title h2{font-size:20px;margin:0}.section-title small{color:var(--muted)}
-    .toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:0 0 13px}.search{flex:1 1 220px;background:#151515;border:1px solid #333;color:white;border-radius:999px;padding:12px 15px;outline:none;}
-    .pink-banner{background:linear-gradient(90deg,#ff4b92,#ff6274);color:white;border-radius:6px;text-align:center;font-weight:900;padding:14px 10px;box-shadow:0 12px 28px rgba(255,75,136,.18);margin-bottom:12px;}
-    .work-grid{display:grid;grid-template-columns:1fr;gap:14px;}
-    .work-card{background:#151515;border:1px solid #2c2c2c;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);}
-    .work-head{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:14px;}
-    .cover{width:96px;height:138px;border-radius:6px;background:#2b2b2b;border:1px solid #444;object-fit:cover;display:block;}
-    .cover.empty{display:grid;place-items:center;color:#777;font-size:12px;text-align:center;padding:8px;}
-    .work-title{font-size:24px;font-weight:900;line-height:1.15;margin:0 0 8px;word-break:break-word}.genre{font-weight:800;color:#ddd;margin-bottom:8px}.meta{color:#a5a5a5;font-weight:700;font-size:14px;line-height:1.6}.heart{color:var(--red);font-size:14px}.tag{display:inline-flex;align-items:center;gap:5px;background:#2d2d2d;color:#dedede;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800;margin:3px 4px 0 0}.tag.done{background:rgba(8,207,82,.14);color:#79ffa9}.tag.wip{background:rgba(255,225,106,.12);color:#ffe58d}
-    .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.episode-list{border-top:1px solid #282828;}.episode{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid #262626;}.episode-thumb{width:54px;height:54px;border-radius:4px;background:#333;object-fit:cover}.episode-main{min-width:0}.episode-title{font-size:17px;font-weight:900;margin-bottom:4px}.episode-note{font-size:12px;color:#888;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.free{color:#ff5863;font-weight:900;font-size:13px}.read-badge{color:#34f77a;font-weight:900;font-size:12px}.all-episodes{margin:14px;background:#3a3a3a;border-radius:5px;padding:14px;text-align:center;font-size:18px;font-weight:900}.empty-state{text-align:center;color:var(--muted);padding:26px 16px;border:1px dashed #444;border-radius:18px;background:#141414;}
-    .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#050505;border-top:1px solid #222;padding:10px 16px calc(10px + var(--safe-bottom));z-index:30;}.bottom-nav-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.nav-item{text-align:center;color:#efefef;font-size:11px;font-weight:800}.nav-ico{width:32px;height:32px;border-radius:50%;background:#fff;color:#000;margin:0 auto 4px;display:grid;place-items:center;font-size:16px}.nav-item:nth-child(n+2) .nav-ico{background:transparent;color:white;border:2px solid white;border-radius:8px}
-    dialog{border:0;border-radius:24px;padding:0;background:#151515;color:white;box-shadow:0 28px 80px rgba(0,0,0,.7);width:min(720px,calc(100vw - 24px));max-height:90dvh;overflow:auto;}dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}.modal{padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #2a2a2a;padding-bottom:12px;margin-bottom:14px}.modal h3{font-size:22px;margin:0}.form-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:680px){.form-grid.two{grid-template-columns:1fr 1fr}.form-grid.three{grid-template-columns:1fr 1fr 1fr}}label{font-size:12px;color:#bbb;font-weight:800;display:block;margin:0 0 7px}.field{background:#101010;border:1px solid #333;border-radius:14px;color:white;padding:12px;width:100%;outline:none}.field:focus{border-color:#666}textarea.field{min-height:92px;resize:vertical}.hint{font-size:11px;color:#858585;line-height:1.5;margin-top:6px}.form-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:16px}.episode-editor{background:#111;border:1px solid #303030;border-radius:16px;padding:12px;margin-top:10px}.episode-editor summary{font-weight:900;cursor:pointer}.episode-editor-body{padding-top:12px}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toast{position:fixed;left:50%;bottom:calc(92px + var(--safe-bottom));transform:translateX(-50%) translateY(20px);background:#fff;color:#111;font-weight:900;padding:13px 18px;border-radius:999px;box-shadow:0 16px 36px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:.25s;z-index:60}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.petal-rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:55}.falling-petal{position:absolute;top:-60px;width:24px;height:34px;border-radius:24px 24px 9px 9px;background:linear-gradient(#ff91ba,#ff4b88);animation:fall linear forwards;}@keyframes fall{to{transform:translateY(110vh) rotate(680deg);opacity:.05}}
-    .analysis-block{background:#101010;border:1px solid #333;border-radius:15px;padding:12px;margin:12px 14px 14px}.analysis-block h4{margin:0 0 8px}.analysis-block p{margin:7px 0;color:#ddd;font-size:13px;line-height:1.65}.hidden{display:none!important}.small-muted{font-size:12px;color:var(--muted);line-height:1.5}.linkish{color:#9ae9ff;text-decoration:underline;background:none;padding:0;border-radius:0}.file-label{display:inline-flex;align-items:center;justify-content:center;background:#2a2a2a;border-radius:12px;padding:11px 13px;color:white;font-weight:800;cursor:pointer}.file-label input{display:none}.import-input{display:none}
+    .logo{width:54px;height:54px;border-radius:15px;background:linear-gradient(145deg,#ff4b8b,#ff895a);display:grid;place-items:center;box-shadow:0 10px 22px rgba(255,75,139,.25);font-size:30px;font-weight:1000;position:relative;overflow:hidden;}
+    .logo:before{content:"";position:absolute;inset:9px 12px;border:3px solid rgba(255,255,255,.9);border-left-width:8px;border-radius:4px;background:rgba(255,255,255,.12);transform:skewY(-4deg)}
+    .logo span{position:relative;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+    h1{margin:0;font-size:clamp(26px,6vw,40px);letter-spacing:.02em;line-height:1.02;font-weight:1000;white-space:nowrap}
+    .sub{margin-top:5px;color:var(--muted);font-size:12px;font-weight:800;line-height:1.35}
+    .primary-btn,.ghost-btn,.mini-btn,.danger-btn{border-radius:999px;padding:11px 15px;font-weight:1000;transition:.12s transform,.12s opacity;white-space:nowrap;}
+    .primary-btn{background:var(--green);color:white;box-shadow:0 12px 28px rgba(8,214,90,.24)}
+    .ghost-btn{background:#2c2c31;color:#fff}.mini-btn{background:#303036;color:#fff;padding:8px 11px;font-size:12px}.danger-btn{background:#3b2025;color:#ffb6bf;padding:8px 11px;font-size:12px}
+    .primary-btn:active,.ghost-btn:active,.mini-btn:active,.danger-btn:active{transform:scale(.97)}
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}@media(min-width:820px){.grid{grid-template-columns:1.08fr .92fr}}
+    .panel{background:rgba(23,23,25,.94);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.25);overflow:hidden}
+    .hero{position:relative;background:linear-gradient(135deg,#19191d,#161619 55%,#241723)}
+    .hero:before{content:"";position:absolute;left:-20px;right:-20px;bottom:-42px;height:96px;background:linear-gradient(90deg,var(--pink),#ff6d6d);filter:blur(0);opacity:.82;border-radius:38px;transform:rotate(-2deg)}
+    .hero>*{position:relative}
+    .hero-row{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+    .name-input,.field,.search{width:100%;background:#242428;border:1px solid #3a3a42;border-radius:16px;color:#fff;padding:12px 13px;outline:none}.name-input:focus,.field:focus,.search:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(255,75,139,.16)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}.stat{background:#111114;border:1px solid #2d2d34;border-radius:18px;padding:12px 9px;min-height:74px}.stat strong{display:block;font-size:22px;line-height:1}.stat span{display:block;margin-top:7px;color:var(--muted);font-size:10px;font-weight:900;line-height:1.35}
+    @media(max-width:420px){.stats{grid-template-columns:repeat(2,1fr)}.topbar{align-items:flex-start}.primary-btn.big-add{width:76px;height:76px;white-space:normal;border-radius:50%;font-size:22px;line-height:1.05;padding:8px}}
+    .stamp-card{display:flex;gap:12px;align-items:center;margin-top:13px;background:#111114;border:1px solid #2d2d34;border-radius:20px;padding:12px}.stamp-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,#ff4b8b,#ff975d);display:grid;place-items:center;font-size:26px}
+    .small-muted{color:var(--muted);font-size:12px;line-height:1.5;font-weight:750}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}.day{background:#242428;border:1px solid #363640;border-radius:14px;text-align:center;min-height:76px;padding:8px 4px;display:flex;flex-direction:column;justify-content:space-between}.dow{font-size:10px;color:var(--muted);font-weight:900}.num{font-size:15px;font-weight:1000}.count{font-size:11px;font-weight:1000;color:#fff;background:#111;border-radius:999px;padding:4px 2px}.today{border-color:var(--green);background:#16301f}.today .count{background:var(--green)}
+    .flower-wrap{display:flex;gap:15px;align-items:center}.flower{position:relative;width:96px;height:96px;display:grid;place-items:center;flex:0 0 auto}.petal{position:absolute;width:34px;height:50px;border-radius:30px 30px 12px 12px;background:linear-gradient(#ff9bc1,#ff4b8b);transform-origin:50% 75%;}.petal:nth-child(1){transform:rotate(0deg) translateY(-23px)}.petal:nth-child(2){transform:rotate(60deg) translateY(-23px)}.petal:nth-child(3){transform:rotate(120deg) translateY(-23px)}.petal:nth-child(4){transform:rotate(180deg) translateY(-23px)}.petal:nth-child(5){transform:rotate(240deg) translateY(-23px)}.petal:nth-child(6){transform:rotate(300deg) translateY(-23px)}.core{position:absolute;width:40px;height:40px;background:var(--yellow);border-radius:50%;z-index:2}.stem{position:absolute;bottom:-28px;width:7px;height:60px;background:#2fb765;border-radius:999px}.leaf{position:absolute;right:18px;bottom:8px;width:34px;height:18px;border-radius:100% 0;background:#2fa95d;transform:rotate(-15deg)}.progress{height:12px;background:#101014;border-radius:999px;overflow:hidden;border:1px solid #33343b;margin:9px 0}.bar{height:100%;background:linear-gradient(90deg,var(--green),#a5ff6d);width:0;transition:.35s width}
+    .data-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.file-btn{display:inline-flex}.file-btn input{display:none}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:24px 0 12px}.section-title h2{margin:0;font-size:22px}.section-title small{color:var(--muted);font-weight:900}.toolbar{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:720px){.toolbar{grid-template-columns:1.5fr .8fr .8fr .8fr}}
+    .view-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0 14px}.view-tab{background:#25252a;border:1px solid #373740;border-radius:999px;color:#eee;padding:10px;font-size:13px;font-weight:1000}.view-tab.active{background:#fff;color:#111}.pink-banner{background:linear-gradient(90deg,#ff438b,#ff6368);border-radius:14px;color:#fff;text-align:center;font-weight:1000;padding:14px 10px;margin:0 0 14px;box-shadow:0 12px 28px rgba(255,75,139,.18)}
+    .work-grid{display:grid;grid-template-columns:1fr;gap:16px}@media(min-width:760px){.work-grid.cards{grid-template-columns:1fr 1fr}.book-grid{grid-template-columns:repeat(3,1fr)}}
+    .shelf-section{margin-bottom:20px}.genre-heading{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}.genre-heading h3{margin:0;font-size:18px}.genre-heading small{color:var(--muted);font-weight:900}.book-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.book-tile{background:#171719;border:1px solid #34343c;border-radius:18px;padding:11px;position:relative;overflow:hidden}.book-tile:before{content:"";position:absolute;top:-25px;right:-25px;width:90px;height:90px;border-radius:50%;background:rgba(255,75,139,.07)}.tile-cover{width:100%;aspect-ratio:2/3;border-radius:10px;background:#2c2c31;object-fit:cover;display:grid;place-items:center;color:#8b8b92;font-size:12px;font-weight:900;margin-bottom:9px;overflow:hidden}.tile-title{font-size:15px;font-weight:1000;line-height:1.25;min-height:38px;position:relative}.tile-meta{font-size:12px;color:var(--muted);font-weight:850;margin-top:5px}.tile-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px;position:relative}.sticky{background:#fff06a;color:#111;border-radius:4px 14px 14px 14px;padding:8px 10px;font-size:12px;font-weight:1000;line-height:1.4;box-shadow:0 8px 18px rgba(0,0,0,.22);transform:rotate(-1.4deg);margin-top:8px;position:relative}.sticky:before{content:"";position:absolute;left:0;top:0;border-top:10px solid rgba(0,0,0,.24);border-right:10px solid transparent}.sticky.mini{font-size:11px;padding:7px 8px}
+    .work-card{background:#171719;border:1px solid #373740;border-radius:24px;overflow:hidden}.work-head{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:14px}.cover{width:96px;height:138px;border-radius:10px;background:#2c2c31;object-fit:cover;display:block}.cover.empty{display:grid;place-items:center;color:#777;font-size:12px;text-align:center;padding:8px}.work-title{font-size:24px;font-weight:1000;line-height:1.15;margin:0 0 8px;word-break:break-word}.genre{font-size:14px;color:#e8e8ed;font-weight:900;margin-bottom:8px}.meta{font-size:13px;color:var(--muted);font-weight:850;line-height:1.6}.heart{color:var(--red)}.tag{display:inline-flex;align-items:center;gap:5px;background:#2b2b31;color:#f6f6f6;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:1000;margin:3px 4px 0 0}.tag.done{background:rgba(8,214,90,.22);color:#80ffa6}.tag.wip{background:rgba(255,224,102,.20);color:#fff098}.tag.source{background:rgba(73,184,255,.18);color:#aee1ff}.card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.episode-list{border-top:1px solid #33343b}.episode{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid #282832;background:#151518}.episode-thumb{width:54px;height:54px;border-radius:8px;background:#303036;object-fit:cover}.episode-title{font-size:17px;font-weight:1000;margin-bottom:4px}.episode-note{font-size:12px;color:var(--muted);white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-weight:750}.unread{color:#ff6372;font-weight:1000;font-size:13px}.read-badge{color:#62ff94;font-weight:1000;font-size:12px}.all-episodes{margin:13px 14px;background:#25252a;border-radius:13px;padding:13px;text-align:center;font-size:17px;font-weight:1000}.analysis-block{background:#121215;border-top:1px solid #33343b;padding:13px 14px}.analysis-block h4{margin:0 0 8px}.analysis-block p{margin:8px 0;color:#dedee5;font-size:13px;line-height:1.65}
+    .history-list{display:grid;gap:10px}.history-date{margin:18px 0 8px;color:#fff;font-size:17px;font-weight:1000}.history-item{background:#171719;border:1px solid #34343c;border-radius:18px;padding:12px;display:grid;grid-template-columns:1fr auto;gap:10px}.history-title{font-weight:1000;font-size:15px}.history-meta{font-size:12px;color:var(--muted);font-weight:850;margin-top:5px;line-height:1.5}.history-actions{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end}.empty-state{text-align:center;color:var(--muted);border:1px dashed #44444d;border-radius:18px;padding:28px 16px;background:#171719;font-weight:850}.hidden{display:none!important}
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:8px 8px calc(8px + var(--safe-bottom));background:linear-gradient(180deg,rgba(14,14,16,0),rgba(14,14,16,.98) 28%)}.bottom-nav-inner{max-width:520px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.nav-item{background:rgba(255,255,255,.92);color:#111;border-radius:12px;padding:7px 4px 6px;font-size:10px;font-weight:1000}.nav-ico{width:34px;height:34px;border-radius:13px;background:#fff;display:grid;place-items:center;margin:0 auto 3px;font-size:18px}.nav-item.active .nav-ico{background:#111;color:#fff}
+    dialog{border:0;border-radius:24px;padding:0;background:#171719;color:#fff;box-shadow:0 28px 90px rgba(0,0,0,.55);width:min(760px,calc(100vw - 22px));max-height:91dvh;overflow:auto}dialog::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(4px)}.modal{padding:17px}.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #34343c;padding-bottom:12px;margin-bottom:14px}.modal h3{font-size:22px;margin:0}.form-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:680px){.form-grid.two{grid-template-columns:1fr 1fr}.form-grid.three{grid-template-columns:1fr 1fr 1fr}}
+    label{display:block;margin:0 0 7px;color:#ddd;font-size:12px;font-weight:1000}textarea.field{min-height:92px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px;font-weight:750}.form-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:16px}.file-label{display:inline-flex;align-items:center;background:#2c2c31;border-radius:14px;padding:11px 13px;font-weight:1000;cursor:pointer}.file-label input{display:none}.episode-editor{background:#121215;border:1px solid #34343c;border-radius:16px;padding:11px;margin-top:9px}.episode-editor summary{font-weight:1000;cursor:pointer}.episode-editor-body{padding-top:12px}.date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.toast{position:fixed;left:50%;bottom:calc(96px + var(--safe-bottom));transform:translateX(-50%) translateY(18px);background:#fff;color:#111;font-weight:1000;padding:13px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:80;box-shadow:0 18px 38px rgba(0,0,0,.34)}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.petal-rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:70}.falling-petal{position:absolute;top:-60px;width:24px;height:34px;border-radius:24px 24px 9px 9px;background:linear-gradient(#ff91ba,#ff4b88);animation:fall linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(680deg);opacity:.05}}
   </style>
 </head>
 <body>
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <div class="logo">読</div>
+        <div class="logo"><span>漫</span></div>
         <div>
           <h1>漫画読破履歴</h1>
           <div class="sub">読んだ日・感想・好き嫌いを、就活で語れる強みにするログ</div>
         </div>
       </div>
-      <button class="primary-btn" id="openWorkModal">＋作品</button>
+      <button class="primary-btn big-add" id="openWorkModal">＋作品</button>
     </header>
 
     <main>
       <div class="grid">
         <section class="panel hero">
           <div class="hero-row">
-            <div>
+            <div style="flex:1;min-width:0">
               <div class="small-muted">ユーザー名</div>
               <input class="name-input" id="profileName" placeholder="例：Keito / あおはる" />
             </div>
@@ -100,6 +98,7 @@
           </div>
           <div class="stats">
             <div class="stat"><strong id="completedCount">0</strong><span>読破済み作品</span></div>
+            <div class="stat"><strong id="todayCount">0</strong><span>今日読んだ話数</span></div>
             <div class="stat"><strong id="weeklyCount">0</strong><span>今週読んだ話数</span></div>
             <div class="stat"><strong id="stampCount">0</strong><span>ログインスタンプ</span></div>
           </div>
@@ -115,10 +114,7 @@
 
         <section class="panel">
           <div class="flower-wrap">
-            <div class="flower" aria-hidden="true">
-              <div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
-              <div class="stem"></div><div class="leaf"></div><div class="core"></div>
-            </div>
+            <div class="flower" aria-hidden="true"><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="stem"></div><div class="leaf"></div><div class="core"></div></div>
             <div style="min-width:0;flex:1">
               <h2 style="margin:0 0 5px;font-size:20px;">10作品ごとに花が散る</h2>
               <div class="small-muted" id="flowerText">あと10作品で花びらが散ります。</div>
@@ -126,473 +122,241 @@
               <div class="small-muted">読破済みにしたタイミングで花びら演出が出ます。</div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
+          <div class="data-actions">
             <button class="mini-btn" id="exportBtn">データを書き出す</button>
-            <label class="mini-btn" for="importFile" style="cursor:pointer;">データを読み込む</label>
-            <input id="importFile" class="import-input" type="file" accept="application/json" />
+            <label class="mini-btn file-btn" for="importFile">データを読み込む<input id="importFile" type="file" accept="application/json" /></label>
             <button class="mini-btn" id="sampleBtn">サンプル投入</button>
           </div>
         </section>
       </div>
 
-      <div class="section-title">
-        <h2>本棚</h2>
+      <div class="section-title" id="libraryTop">
+        <h2 id="viewTitle">本棚</h2>
         <small id="workSummary">0作品</small>
       </div>
       <div class="toolbar">
         <input id="searchInput" class="search" placeholder="作品名・ジャンル・感想で検索" />
-        <select id="statusFilter" class="field" style="width:auto;border-radius:999px;">
-          <option value="all">すべて</option>
-          <option value="done">読破済み</option>
-          <option value="wip">途中</option>
-          <option value="finished">完結</option>
-          <option value="ongoing">連載中</option>
-        </select>
+        <select id="statusFilter" class="field"><option value="all">すべて</option><option value="done">読破済み</option><option value="wip">途中</option><option value="finished">完結</option><option value="ongoing">連載中</option></select>
+        <select id="genreFilter" class="field"><option value="all">全ジャンル</option></select>
+        <select id="sourceFilter" class="field"><option value="all">原作種別すべて</option><option value="comic_original">コミックオリジナル</option><option value="novel_comicalize">ノベル原作コミカライズ</option><option value="other_source">その他原作あり</option><option value="unknown">不明</option></select>
       </div>
-      <div class="pink-banner">まだ読んでいないの！？ 定番webtoon 100選！ ›</div>
+      <div class="view-tabs">
+        <button class="view-tab active" data-view="shelf">本棚</button>
+        <button class="view-tab" data-view="cards">感想一覧</button>
+        <button class="view-tab" data-view="history">読書履歴</button>
+      </div>
+      <div class="pink-banner">今日読んだ分は「＋1」「＋3」「記録」から入れると、日別話数に自動反映されます ›</div>
       <div id="works" class="work-grid"></div>
     </main>
   </div>
 
   <nav class="bottom-nav" aria-label="アプリ内メニュー">
     <div class="bottom-nav-inner">
-      <button class="nav-item" id="navTop"><div class="nav-ico">★</div>おすすめ</button>
+      <button class="nav-item active" id="navShelf"><div class="nav-ico">本</div>本棚</button>
+      <button class="nav-item" id="navHistory"><div class="nav-ico">時</div>履歴</button>
       <button class="nav-item" id="navSearch"><div class="nav-ico">⌕</div>探す</button>
       <button class="nav-item" id="navAdd"><div class="nav-ico">＋</div>追加</button>
-      <button class="nav-item" id="navExport"><div class="nav-ico">本</div>保存</button>
+      <button class="nav-item" id="navExport"><div class="nav-ico">⇩</div>保存</button>
     </div>
   </nav>
 
   <dialog id="workModal">
     <form class="modal" id="workForm" method="dialog">
-      <div class="modal-head">
-        <h3 id="modalTitle">作品を追加</h3>
-        <button class="ghost-btn" type="button" id="closeModal">閉じる</button>
-      </div>
+      <div class="modal-head"><h3 id="modalTitle">作品を追加</h3><button class="ghost-btn" type="button" id="closeModal">閉じる</button></div>
       <input type="hidden" id="editingId" />
       <div class="form-grid two">
-        <div>
-          <label>タイトル</label>
-          <input class="field" id="titleInput" required placeholder="例：オークの樹の下" />
-        </div>
-        <div>
-          <label>ジャンル</label>
-          <input class="field" id="genreInput" placeholder="例：ファンタジー・SF / 恋愛 / BL" />
-        </div>
+        <div><label>タイトル</label><input class="field" id="titleInput" required placeholder="例：オークの樹の下" /></div>
+        <div><label>ジャンル</label><input class="field" id="genreInput" placeholder="例：恋愛ファンタジー / 異世界 / BL" /></div>
       </div>
       <div class="form-grid three" style="margin-top:12px;">
-        <div>
-          <label>全何話？</label>
-          <input class="field" id="totalInput" type="number" min="1" max="999" value="1" />
-        </div>
-        <div>
-          <label>完結の有無</label>
-          <select class="field" id="finishedInput">
-            <option value="ongoing">連載中・未完結</option>
-            <option value="finished">完結</option>
-            <option value="unknown">不明</option>
-          </select>
-        </div>
-        <div>
-          <label>読破状態</label>
-          <select class="field" id="readStatusInput">
-            <option value="wip">途中</option>
-            <option value="done">読破済み</option>
-          </select>
-        </div>
+        <div><label>原作種別</label><select class="field" id="sourceTypeInput"><option value="unknown">不明</option><option value="comic_original">コミックオリジナル</option><option value="novel_comicalize">ノベル原作コミカライズ</option><option value="other_source">その他原作あり</option></select></div>
+        <div><label>全何話？</label><input class="field" id="totalInput" type="number" min="1" max="9999" value="1" /></div>
+        <div><label>完結の有無</label><select class="field" id="finishedInput"><option value="ongoing">連載中・未完結</option><option value="finished">完結</option><option value="unknown">不明</option></select></div>
       </div>
-      <div style="margin-top:12px;">
-        <label>表紙画像</label>
-        <label class="file-label">画像を選ぶ<input id="coverInput" type="file" accept="image/*" /></label>
-        <span class="small-muted" id="coverHint">未選択なら空白の表紙になります。</span>
+      <div class="form-grid three" style="margin-top:12px;">
+        <div><label>読破状態</label><select class="field" id="readStatusInput"><option value="wip">途中</option><option value="done">読破済み</option></select></div>
+        <div><label>今何話まで読んだ？</label><input class="field" id="currentEpisodeInput" type="number" min="0" max="9999" value="0" /></div>
+        <div><label>付箋メモ</label><input class="field" id="stickyNoteInput" placeholder="例：次は23話から / 伏線確認" /></div>
+      </div>
+      <div style="margin-top:12px;"><label>表紙画像</label><label class="file-label">画像を選ぶ<input id="coverInput" type="file" accept="image/*" /></label> <span class="small-muted" id="coverHint">未選択なら空白の表紙になります。</span></div>
+      <div class="form-grid two" style="margin-top:12px;">
+        <div><label>一言でいうと？</label><input class="field" id="oneLineInput" placeholder="例：不器用な愛が刺さる宮廷ロマンス" /></div>
+        <div><label>就活で語れる気づき</label><input class="field" id="insightInput" placeholder="例：序盤の引きが強い / 課金導線がうまい" /></div>
       </div>
       <div class="form-grid two" style="margin-top:12px;">
-        <div>
-          <label>一言でいうと？</label>
-          <input class="field" id="oneLineInput" placeholder="例：不器用な愛が刺さる宮廷ロマンス" />
-        </div>
-        <div>
-          <label>就活で語れる気づき</label>
-          <input class="field" id="insightInput" placeholder="例：序盤の引きが強い / 読者課金導線がうまい" />
-        </div>
-      </div>
-      <div class="form-grid two" style="margin-top:12px;">
-        <div>
-          <label>面白かった点</label>
-          <textarea class="field" id="goodInput" placeholder="キャラ、展開、絵、課金したくなる理由など"></textarea>
-        </div>
-        <div>
-          <label>合わなかった点・改善案</label>
-          <textarea class="field" id="badInput" placeholder="テンポ、見せ方、説明量、離脱しそうな点など"></textarea>
-        </div>
+        <div><label>面白かった点</label><textarea class="field" id="goodInput" placeholder="キャラ、展開、絵、課金したくなる理由など"></textarea></div>
+        <div><label>合わなかった点・改善案</label><textarea class="field" id="badInput" placeholder="テンポ、見せ方、説明量、離脱しそうな点など"></textarea></div>
       </div>
       <div style="margin-top:14px;">
-        <div class="modal-head" style="border:0;padding:0;margin:0 0 8px;">
-          <div>
-            <label style="margin:0;color:#fff;font-size:14px;">各話感想</label>
-            <div class="hint">全話数に合わせて 1話、2話、3話… が自動で作られます。</div>
-          </div>
-          <button class="mini-btn" type="button" id="buildEpisodes">話数を反映</button>
-        </div>
+        <div class="modal-head" style="border:0;padding:0;margin:0 0 8px;"><div><label style="margin:0;color:#fff;font-size:14px;">各話感想</label><div class="hint">全話数に合わせて 1話、2話、3話… が自動で作られます。読んだ話数は「読書記録」からも自動でつきます。</div></div><button class="mini-btn" type="button" id="buildEpisodes">話数を反映</button></div>
         <div id="episodeEditors"></div>
       </div>
-      <div class="form-actions">
-        <button class="danger-btn" id="deleteWork" type="button">削除</button>
-        <button class="ghost-btn" type="button" id="markDoneBtn">読破済みにする</button>
-        <button class="primary-btn" type="submit">保存</button>
-      </div>
+      <div class="form-actions"><button class="danger-btn" id="deleteWork" type="button">削除</button><button class="ghost-btn" type="button" id="markDoneBtn">読破済みにする</button><button class="primary-btn" type="submit">保存</button></div>
     </form>
   </dialog>
 
-  <div class="toast" id="toast">保存しました</div>
-  <div class="petal-rain" id="petalRain"></div>
+  <dialog id="readModal">
+    <form class="modal" id="readForm" method="dialog">
+      <div class="modal-head"><h3 id="readModalTitle">読書記録</h3><button class="ghost-btn" type="button" id="closeReadModal">閉じる</button></div>
+      <input type="hidden" id="readWorkId" /><input type="hidden" id="readLogId" />
+      <div class="form-grid two">
+        <div><label>読んだ日</label><input class="field" id="readDateInput" type="date" /></div>
+        <div><label>今日読んだ話数</label><input class="field" id="readCountInput" type="number" min="1" max="999" value="1" /></div>
+      </div>
+      <div class="form-grid two" style="margin-top:12px;">
+        <div><label>読んだ範囲：何話から</label><input class="field" id="readFromInput" type="number" min="1" max="9999" /></div>
+        <div><label>読んだ範囲：何話まで</label><input class="field" id="readToInput" type="number" min="1" max="9999" /></div>
+      </div>
+      <div style="margin-top:12px;"><label>メモ</label><textarea class="field" id="readMemoInput" placeholder="例：5話分一気読み。引きが強くて止まらなかった。"></textarea></div>
+      <div class="hint">保存すると「今日読んだ話数」「今週読んだ話数」「読書履歴」に自動反映されます。</div>
+      <div class="form-actions"><button class="danger-btn hidden" id="deleteReadLog" type="button">この履歴を削除</button><button class="primary-btn" type="submit">読書記録を保存</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast">保存しました</div><div class="petal-rain" id="petalRain"></div>
 
   <script>
     const STORAGE_KEY = 'manga-reading-log-v1';
     const $ = (id) => document.getElementById(id);
     const todayStr = () => new Date().toISOString().slice(0,10);
-    const uid = () => 'w_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+    const uid = () => 'id_' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
     const defaultState = () => ({ profileName:'', stampDates:[], works:[], lastMilestone:0 });
     let state = load();
     let tempCover = null;
+    let currentView = 'shelf';
 
     function load(){
       try { return { ...defaultState(), ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; }
       catch(e){ return defaultState(); }
     }
-    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); render(); }
-    function showToast(text='保存しました'){
-      const t=$('toast'); t.textContent=text; t.classList.add('show');
-      setTimeout(()=>t.classList.remove('show'),1800);
+    function save(){ normalizeAll(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); render(); }
+    function showToast(text='保存しました'){ const t=$('toast'); t.textContent=text; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+    function escapeHtml(str=''){ return String(str).replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s])); }
+    function fmtDate(s){ if(!s) return ''; const d=new Date(s+'T00:00:00'); return `${d.getMonth()+1}/${d.getDate()}`; }
+    function fmtLongDate(s){ if(!s) return ''; const d=new Date(s+'T00:00:00'); const dows=['日','月','火','水','木','金','土']; return `${d.getMonth()+1}/${d.getDate()}(${dows[d.getDay()]})`; }
+    function sourceLabel(v){ return {comic_original:'コミックオリジナル',novel_comicalize:'ノベル原作コミカライズ',other_source:'その他原作あり',unknown:'不明'}[v||'unknown'] || '不明'; }
+
+    function normalizeAll(){ state.works = (state.works || []).map(normalizeWork); }
+    function normalizeWork(w){
+      w = { ...w };
+      w.sourceType = w.sourceType || 'unknown';
+      w.finished = w.finished || 'ongoing';
+      w.readStatus = w.readStatus || 'wip';
+      w.episodes = Array.isArray(w.episodes) ? w.episodes : [];
+      if(!Array.isArray(w.readingLogs)){
+        const grouped = {};
+        w.episodes.filter(e=>e.readDate).forEach(e=>{
+          const d=e.readDate; grouped[d] ||= {date:d,count:0,from:Number(e.number)||1,to:Number(e.number)||1,memo:'旧形式の読書記録',id:uid(),createdAt:new Date().toISOString()};
+          grouped[d].count += 1; grouped[d].from = Math.min(grouped[d].from, Number(e.number)||1); grouped[d].to = Math.max(grouped[d].to, Number(e.number)||1);
+        });
+        w.readingLogs = Object.values(grouped);
+      }
+      w.readingLogs = (w.readingLogs || []).map(l=>({ id:l.id || uid(), date:l.date || l.readDate || todayStr(), count:Math.max(1,Number(l.count||1)), from:l.from?Number(l.from):'', to:l.to?Number(l.to):'', memo:l.memo || '', createdAt:l.createdAt || new Date().toISOString(), updatedAt:l.updatedAt || l.createdAt || new Date().toISOString() }));
+      const maxLogTo = Math.max(0, ...w.readingLogs.map(l=>Number(l.to)||0));
+      const maxEp = Math.max(0, ...w.episodes.filter(e=>e.readDate).map(e=>Number(e.number)||0));
+      w.currentEpisode = Math.max(0, Number(w.currentEpisode || 0), maxLogTo, maxEp);
+      w.stickyNote = w.stickyNote || '';
+      w.totalEpisodes = Math.max(1, Number(w.totalEpisodes || w.episodes.length || w.currentEpisode || 1));
+      return w;
     }
-    function escapeHtml(str=''){
-      return String(str).replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
+    function getWork(id){ const w=state.works.find(x=>x.id===id); return w ? normalizeWork(w) : null; }
+    function replaceWork(work){ const idx=state.works.findIndex(w=>w.id===work.id); if(idx>=0) state.works[idx]=work; }
+    function sumRead(w){ w=normalizeWork(w); return (w.readingLogs||[]).reduce((a,l)=>a+Number(l.count||0),0); }
+    function allReadingLogs(){
+      return state.works.flatMap(w => normalizeWork(w).readingLogs.map(l => ({...l, workId:w.id, title:w.title || '無題', genre:w.genre || 'ジャンル未設定'})))
+        .sort((a,b)=> (b.date+a.title).localeCompare(a.date+b.title));
     }
-    function fmtDate(s){
-      if(!s) return '';
-      const d = new Date(s + 'T00:00:00');
-      return `${d.getMonth()+1}/${d.getDate()}`;
-    }
-    function weekDates(){
-      const now = new Date();
-      const day = now.getDay();
-      const start = new Date(now); start.setDate(now.getDate() - day);
-      return Array.from({length:7},(_,i)=>{ const d=new Date(start); d.setDate(start.getDate()+i); return d; });
-    }
-    function episodeReadDates(){
-      return state.works.flatMap(w => (w.episodes || []).filter(e=>e.readDate).map(e=>e.readDate));
-    }
-    function countReadsOn(dateStr){ return episodeReadDates().filter(d=>d===dateStr).length; }
+    function countReadsOn(dateStr){ return allReadingLogs().filter(l=>l.date===dateStr).reduce((a,l)=>a+Number(l.count||0),0); }
+    function weekDates(){ const now=new Date(); const day=now.getDay(); const start=new Date(now); start.setDate(now.getDate()-day); return Array.from({length:7},(_,i)=>{const d=new Date(start); d.setDate(start.getDate()+i); return d;}); }
     function completedWorks(){ return state.works.filter(w => w.readStatus === 'done' || !!w.completedAt); }
-    function ensureStamp(){
-      const today = todayStr();
-      if(!state.stampDates.includes(today)){
-        state.stampDates.push(today);
-        state.stampDates = [...new Set(state.stampDates)].sort();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }
-    }
+
+    function ensureStamp(){ const today=todayStr(); if(!state.stampDates.includes(today)){ state.stampDates.push(today); state.stampDates=[...new Set(state.stampDates)].sort(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } }
+
     function render(){
+      normalizeAll();
       $('profileName').value = state.profileName || '';
-      const doneCount = completedWorks().length;
-      $('completedCount').textContent = doneCount;
-      $('stampCount').textContent = state.stampDates.length;
-      const dates = weekDates().map(d=>d.toISOString().slice(0,10));
-      const weekly = episodeReadDates().filter(d=>dates.includes(d)).length;
-      $('weeklyCount').textContent = weekly;
-      $('stampText').textContent = state.stampDates.includes(todayStr()) ? '今日のスタンプ獲得済み' : '今日のスタンプを押そう';
-      $('stampSub').textContent = state.stampDates.includes(todayStr()) ? `${fmtDate(todayStr())} に記録済み。継続えらい。` : 'ボタンを押すか、アプリを開くと今日分がつきます。';
-      $('stampIcon').textContent = state.stampDates.includes(todayStr()) ? '🌸' : '🌙';
-      renderWeek();
-      renderFlower(doneCount);
-      renderWorks();
+      const doneCount=completedWorks().length;
+      $('completedCount').textContent=doneCount;
+      $('todayCount').textContent=countReadsOn(todayStr());
+      const dates=weekDates().map(d=>d.toISOString().slice(0,10));
+      $('weeklyCount').textContent=dates.reduce((a,d)=>a+countReadsOn(d),0);
+      $('stampCount').textContent=state.stampDates.length;
+      $('stampText').textContent=state.stampDates.includes(todayStr()) ? '今日のスタンプ獲得済み' : '今日のスタンプを押そう';
+      $('stampSub').textContent=state.stampDates.includes(todayStr()) ? `${fmtDate(todayStr())} に記録済み。継続えらい。` : 'ボタンを押すか、アプリを開くと今日分がつきます。';
+      $('stampIcon').textContent=state.stampDates.includes(todayStr()) ? '🌸' : '🌙';
+      renderWeek(); renderFlower(doneCount); renderFilters(); renderMain();
     }
-    function renderWeek(){
-      const dows = ['日','月','火','水','木','金','土'];
-      const today = todayStr();
-      $('weekView').innerHTML = weekDates().map(d=>{
-        const s = d.toISOString().slice(0,10);
-        const c = countReadsOn(s);
-        return `<div class="day ${s===today?'today':''}"><div class="dow">${dows[d.getDay()]}</div><div class="num">${d.getDate()}</div><div class="count">${c}話</div></div>`;
-      }).join('');
+    function renderWeek(){ const dows=['日','月','火','水','木','金','土']; const today=todayStr(); $('weekView').innerHTML = weekDates().map(d=>{ const s=d.toISOString().slice(0,10); const c=countReadsOn(s); return `<div class="day ${s===today?'today':''}"><div class="dow">${dows[d.getDay()]}</div><div class="num">${d.getDate()}</div><div class="count">${c}話</div></div>`; }).join(''); }
+    function renderFlower(doneCount){ const mod=doneCount%10; const remain=mod===0 && doneCount>0 ? 10 : 10-mod; $('flowerBar').style.width=`${(mod/10)*100}%`; $('flowerText').textContent = doneCount===0 ? 'あと10作品で花びらが散ります。' : (mod===0 ? `${doneCount}作品読破。次の花まであと10作品。` : `次の花まであと${remain}作品。現在${doneCount}作品読破。`); }
+    function renderFilters(){ const current=$('genreFilter').value || 'all'; const genres=[...new Set(state.works.map(w=>(w.genre||'ジャンル未設定').trim()||'ジャンル未設定'))].sort(); $('genreFilter').innerHTML = '<option value="all">全ジャンル</option>' + genres.map(g=>`<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`).join(''); $('genreFilter').value = genres.includes(current) ? current : 'all'; }
+
+    function filteredWorks(){ const q=($('searchInput')?.value||'').trim().toLowerCase(); const status=$('statusFilter')?.value||'all'; const genre=$('genreFilter')?.value||'all'; const source=$('sourceFilter')?.value||'all'; return state.works.filter(raw=>{ const w=normalizeWork(raw); const hay=[w.title,w.genre,w.oneLine,w.insight,w.good,w.bad,w.stickyNote,sourceLabel(w.sourceType),...(w.episodes||[]).map(e=>e.note)].join(' ').toLowerCase(); const okQ=!q||hay.includes(q); const okS=status==='all'||(status==='done'&&w.readStatus==='done')||(status==='wip'&&w.readStatus!=='done')||(status==='finished'&&w.finished==='finished')||(status==='ongoing'&&w.finished==='ongoing'); const okG=genre==='all'||(w.genre||'ジャンル未設定')===genre; const okSrc=source==='all'||(w.sourceType||'unknown')===source; return okQ&&okS&&okG&&okSrc; }).sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||'')); }
+    function coverHtml(w, cls='cover'){ if(w.cover) return `<img class="${cls}" alt="${escapeHtml(w.title)}の表紙" src="${w.cover}">`; return `<div class="${cls} empty">表紙<br>未設定</div>`; }
+    function setView(v){ currentView=v; document.querySelectorAll('.view-tab').forEach(b=>b.classList.toggle('active',b.dataset.view===v)); document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); if(v==='shelf') $('navShelf').classList.add('active'); if(v==='history') $('navHistory').classList.add('active'); renderMain(); $('libraryTop').scrollIntoView({behavior:'smooth',block:'start'}); }
+    function renderMain(){
+      const list=filteredWorks();
+      $('works').className = currentView==='cards' ? 'work-grid cards' : 'work-grid';
+      $('viewTitle').textContent = currentView==='shelf' ? '本棚' : currentView==='cards' ? '感想一覧' : '読書履歴';
+      $('workSummary').textContent = currentView==='history' ? `${allReadingLogs().length}件` : `${state.works.length}作品 / 表示${list.length}作品`;
+      if(currentView==='shelf') return renderShelf(list);
+      if(currentView==='history') return renderHistory();
+      return renderCards(list);
     }
-    function renderFlower(doneCount){
-      const mod = doneCount % 10;
-      const remain = mod === 0 && doneCount > 0 ? 10 : 10 - mod;
-      $('flowerBar').style.width = `${(mod/10)*100}%`;
-      if(doneCount === 0){
-        $('flowerText').textContent = 'あと10作品で花びらが散ります。';
-      } else if(mod === 0){
-        $('flowerText').textContent = `${doneCount}作品読破。次の花まであと10作品。`;
-      } else {
-        $('flowerText').textContent = `次の花まであと${remain}作品。現在${doneCount}作品読破。`;
-      }
+    function renderShelf(list){
+      if(!state.works.length){ $('works').innerHTML=`<div class="empty-state"><strong>まだ作品がありません</strong><br>＋作品から、最近読んだ漫画を1つ入れてみて。</div>`; return; }
+      if(!list.length){ $('works').innerHTML=`<div class="empty-state">検索条件に合う作品がありません。</div>`; return; }
+      const groups={}; list.forEach(w=>{ const g=(w.genre||'ジャンル未設定').trim()||'ジャンル未設定'; (groups[g] ||= []).push(w); });
+      $('works').innerHTML = Object.entries(groups).map(([g,items])=>`<section class="shelf-section"><div class="genre-heading"><h3>${escapeHtml(g)}</h3><small>${items.length}作品</small></div><div class="book-grid">${items.map(renderBookTile).join('')}</div></section>`).join('');
     }
-    function filteredWorks(){
-      const q = $('searchInput')?.value?.trim().toLowerCase() || '';
-      const status = $('statusFilter')?.value || 'all';
-      return state.works.filter(w => {
-        const hay = [w.title,w.genre,w.oneLine,w.insight,w.good,w.bad,...(w.episodes||[]).map(e=>e.note)].join(' ').toLowerCase();
-        const okQ = !q || hay.includes(q);
-        const okS = status === 'all' ||
-          (status === 'done' && w.readStatus === 'done') ||
-          (status === 'wip' && w.readStatus !== 'done') ||
-          (status === 'finished' && w.finished === 'finished') ||
-          (status === 'ongoing' && w.finished === 'ongoing');
-        return okQ && okS;
-      }).sort((a,b)=>(b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
+    function renderBookTile(raw){ const w=normalizeWork(raw); const read=sumRead(w); const total=Math.max(1,Number(w.totalEpisodes||1)); const current=Number(w.currentEpisode||0); return `<article class="book-tile"><div class="tile-cover">${w.cover?`<img src="${w.cover}" alt="" style="width:100%;height:100%;object-fit:cover">`:'表紙<br>未設定'}</div><div class="tile-title">${escapeHtml(w.title||'無題')}</div><div class="tile-meta">${read}/${total}話記録 ・ ${w.finished==='finished'?'完結':w.finished==='ongoing'?'連載中':'不明'}</div><span class="tag ${w.readStatus==='done'?'done':'wip'}">${w.readStatus==='done'?'読破済み':'途中'}</span><span class="tag source">${sourceLabel(w.sourceType)}</span>${w.readStatus!=='done'?`<div class="sticky mini">付箋：${current?`${current}話まで`:'まだ未記録'}${w.stickyNote?`<br>${escapeHtml(w.stickyNote)}`:''}</div>`:''}<div class="tile-actions"><button class="mini-btn" data-action="quick" data-count="1" data-id="${w.id}">＋1</button><button class="mini-btn" data-action="quick" data-count="3" data-id="${w.id}">＋3</button><button class="mini-btn" data-action="read" data-id="${w.id}">記録</button><button class="mini-btn" data-action="edit" data-id="${w.id}">開く</button></div></article>`; }
+    function renderCards(list){
+      if(!state.works.length){ $('works').innerHTML=`<div class="empty-state"><strong>まだ作品がありません</strong><br>＋作品から、最近読んだ漫画を1つ入れてみて。</div>`; return; }
+      if(!list.length){ $('works').innerHTML=`<div class="empty-state">検索条件に合う作品がありません。</div>`; return; }
+      $('works').innerHTML = list.map(raw=>{ const w=normalizeWork(raw); const total=Math.max(1,Number(w.totalEpisodes||1)); const read=sumRead(w); const eps=(w.episodes||[]).slice(0,5).map(e=>`<div class="episode">${w.cover?`<img class="episode-thumb" src="${w.cover}" alt="">`:`<div class="episode-thumb"></div>`}<div class="episode-main"><div class="episode-title">${e.number}話. (${e.number})</div><div class="episode-note">${e.note?escapeHtml(e.note):'感想未入力'} ${e.readDate?'・'+fmtDate(e.readDate):''}</div></div><div>${e.readDate?'<span class="read-badge">記録済</span>':'<span class="unread">未読</span>'}</div></div>`).join(''); return `<article class="work-card"><div class="work-head">${coverHtml(w)}<div><h3 class="work-title">${escapeHtml(w.title||'無題')}</h3><div class="genre">${escapeHtml(w.genre||'ジャンル未設定')}</div><div class="meta"><span class="heart">♥</span> ${read.toLocaleString()} / ${total.toLocaleString()}話 記録　現在：${Number(w.currentEpisode||0)}話まで</div><span class="tag ${w.readStatus==='done'?'done':'wip'}">${w.readStatus==='done'?'読破済み':'途中'}</span><span class="tag">${w.finished==='finished'?'完結':w.finished==='ongoing'?'連載中':'不明'}</span><span class="tag source">${sourceLabel(w.sourceType)}</span>${w.readStatus!=='done'?`<div class="sticky">付箋：${Number(w.currentEpisode||0)?`${Number(w.currentEpisode||0)}話まで読んだ`:'まだ読書記録なし'}${w.stickyNote?`<br>${escapeHtml(w.stickyNote)}`:''}</div>`:''}<div class="card-actions"><button class="mini-btn" data-action="quick" data-count="1" data-id="${w.id}">今日＋1話</button><button class="mini-btn" data-action="quick" data-count="3" data-id="${w.id}">今日＋3話</button><button class="mini-btn" data-action="read" data-id="${w.id}">読んだ分を記録</button><button class="mini-btn" data-action="edit" data-id="${w.id}">編集・感想追加</button></div></div></div><div class="episode-list">${eps||''}</div><div class="all-episodes">全${total}話 ›</div>${(w.oneLine||w.insight||w.good||w.bad)?`<div class="analysis-block"><h4>作品メモ</h4>${w.oneLine?`<p><strong>一言：</strong>${escapeHtml(w.oneLine)}</p>`:''}${w.insight?`<p><strong>就活で語れる気づき：</strong>${escapeHtml(w.insight)}</p>`:''}${w.good?`<p><strong>面白かった点：</strong>${escapeHtml(w.good)}</p>`:''}${w.bad?`<p><strong>合わなかった点・改善案：</strong>${escapeHtml(w.bad)}</p>`:''}</div>`:''}</article>`; }).join('');
     }
-    function coverHtml(w, cls='cover'){
-      if(w.cover) return `<img class="${cls}" alt="${escapeHtml(w.title)}の表紙" src="${w.cover}">`;
-      return `<div class="${cls} empty">表紙<br>未設定</div>`;
+    function renderHistory(){
+      let logs=allReadingLogs(); const q=($('searchInput')?.value||'').trim().toLowerCase(); if(q) logs=logs.filter(l=>[l.title,l.genre,l.memo].join(' ').toLowerCase().includes(q));
+      if(!logs.length){ $('works').innerHTML=`<div class="empty-state"><strong>読書履歴がまだありません</strong><br>本棚の「＋1」「＋3」「記録」から入れると、ここに日付順で残ります。</div>`; return; }
+      let last=''; $('works').innerHTML = `<div class="history-list">${logs.map(l=>{ const h=l.date!==last ? `<div class="history-date">${fmtLongDate(l.date)}：${countReadsOn(l.date)}話</div>` : ''; last=l.date; return `${h}<article class="history-item"><div><div class="history-title">${escapeHtml(l.title)}</div><div class="history-meta">${Number(l.count||1)}話読んだ ${l.from&&l.to?`（${l.from}〜${l.to}話）`:''}${l.memo?`<br>${escapeHtml(l.memo)}`:''}</div></div><div class="history-actions"><button class="mini-btn" data-action="editlog" data-id="${l.workId}" data-log="${l.id}">編集</button><button class="mini-btn" data-action="edit" data-id="${l.workId}">作品</button></div></article>`; }).join('')}</div>`;
     }
-    function renderWorks(){
-      const list = filteredWorks();
-      $('workSummary').textContent = `${state.works.length}作品 / 表示${list.length}作品`;
-      if(!state.works.length){
-        $('works').innerHTML = `<div class="empty-state"><strong>まだ作品がありません</strong><br>＋作品から、最近読んだ漫画を1つ入れてみて。</div>`;
-        return;
-      }
-      if(!list.length){
-        $('works').innerHTML = `<div class="empty-state">検索条件に合う作品がありません。</div>`;
-        return;
-      }
-      $('works').innerHTML = list.map(w => {
-        const total = Math.max(1, Number(w.totalEpisodes || (w.episodes||[]).length || 1));
-        const read = (w.episodes||[]).filter(e=>e.readDate || e.note).length;
-        const eps = (w.episodes||[]).slice(0,6).map(e=>`
-          <div class="episode">
-            ${w.cover ? `<img class="episode-thumb" src="${w.cover}" alt="">` : `<div class="episode-thumb"></div>`}
-            <div class="episode-main">
-              <div class="episode-title">${e.number}話. (${e.number})</div>
-              <div class="episode-note">${e.note ? escapeHtml(e.note) : '感想未入力'} ${e.readDate ? '・' + fmtDate(e.readDate) : ''}</div>
-            </div>
-            <div>${e.readDate ? '<span class="read-badge">記録済</span>' : '<span class="free">未読</span>'}</div>
-          </div>`).join('');
-        return `<article class="work-card">
-          <div class="work-head">
-            ${coverHtml(w)}
-            <div>
-              <h3 class="work-title">${escapeHtml(w.title || '無題')}</h3>
-              <div class="genre">${escapeHtml(w.genre || 'ジャンル未設定')}</div>
-              <div class="meta"><span class="heart">♥</span> ${read.toLocaleString()} / ${total.toLocaleString()}話 記録</div>
-              <span class="tag ${w.readStatus === 'done' ? 'done':'wip'}">${w.readStatus === 'done' ? '読破済み':'途中'}</span>
-              <span class="tag">${w.finished === 'finished' ? '完結' : w.finished === 'ongoing' ? '連載中' : '不明'}</span>
-              ${w.insight ? `<span class="tag">気づきあり</span>`:''}
-              <div class="card-actions">
-                <button class="mini-btn" data-action="edit" data-id="${w.id}">編集・感想追加</button>
-                <button class="mini-btn" data-action="quickread" data-id="${w.id}">今日読んだ話を記録</button>
-              </div>
-            </div>
-          </div>
-          <div class="episode-list">${eps || ''}</div>
-          <div class="all-episodes">全${total}話 ›</div>
-          ${(w.oneLine||w.insight||w.good||w.bad) ? `<div class="analysis-block">
-            <h4>作品メモ</h4>
-            ${w.oneLine ? `<p><strong>一言：</strong>${escapeHtml(w.oneLine)}</p>`:''}
-            ${w.insight ? `<p><strong>就活で語れる気づき：</strong>${escapeHtml(w.insight)}</p>`:''}
-            ${w.good ? `<p><strong>面白かった点：</strong>${escapeHtml(w.good)}</p>`:''}
-            ${w.bad ? `<p><strong>合わなかった点・改善案：</strong>${escapeHtml(w.bad)}</p>`:''}
-          </div>`:''}
-        </article>`;
-      }).join('');
-    }
-    function openModal(work=null){
-      tempCover = null;
-      $('workForm').reset();
-      $('editingId').value = work?.id || '';
-      $('modalTitle').textContent = work ? '作品を編集' : '作品を追加';
-      $('titleInput').value = work?.title || '';
-      $('genreInput').value = work?.genre || '';
-      $('totalInput').value = work?.totalEpisodes || 1;
-      $('finishedInput').value = work?.finished || 'ongoing';
-      $('readStatusInput').value = work?.readStatus || 'wip';
-      $('oneLineInput').value = work?.oneLine || '';
-      $('insightInput').value = work?.insight || '';
-      $('goodInput').value = work?.good || '';
-      $('badInput').value = work?.bad || '';
-      $('deleteWork').classList.toggle('hidden', !work);
-      $('markDoneBtn').textContent = work?.readStatus === 'done' ? '途中に戻す' : '読破済みにする';
-      $('coverHint').textContent = work?.cover ? '現在の表紙あり。変更する場合だけ選択。' : '未選択なら空白の表紙になります。';
-      buildEpisodeEditors(work?.episodes || [], Number(work?.totalEpisodes || 1));
-      $('workModal').showModal();
-    }
-    function buildEpisodeEditors(existing=[], total=null){
-      const n = Math.max(1, Math.min(999, Number(total ?? ($('totalInput').value || 1))));
-      const map = new Map(existing.map(e=>[Number(e.number), e]));
-      const html = Array.from({length:n},(_,i)=>{
-        const no = i+1; const e = map.get(no) || {number:no,note:'',readDate:''};
-        return `<details class="episode-editor" ${no<=3?'open':''}>
-          <summary>${no}話. (${no})</summary>
-          <div class="episode-editor-body">
-            <div class="date-row">
-              <div><label>読んだ日</label><input class="field ep-date" data-no="${no}" type="date" value="${escapeHtml(e.readDate||'')}"></div>
-              <div><label>ひとことタグ</label><input class="field ep-tag" data-no="${no}" value="${escapeHtml(e.tag||'')}" placeholder="例：引きが強い"></div>
-            </div>
-            <div style="margin-top:10px;"><label>感想・分析</label><textarea class="field ep-note" data-no="${no}" placeholder="この話で面白かった点、離脱しそうな点、構成の気づきなど">${escapeHtml(e.note||'')}</textarea></div>
-          </div>
-        </details>`;
-      }).join('');
-      $('episodeEditors').innerHTML = html;
-    }
-    function collectEpisodes(old=[]){
-      const n = Math.max(1, Number($('totalInput').value || 1));
-      const oldMap = new Map(old.map(e=>[Number(e.number),e]));
-      return Array.from({length:n},(_,i)=>{
-        const no = i+1;
-        return {
-          ...(oldMap.get(no)||{}),
-          number:no,
-          readDate: document.querySelector(`.ep-date[data-no="${no}"]`)?.value || '',
-          tag: document.querySelector(`.ep-tag[data-no="${no}"]`)?.value || '',
-          note: document.querySelector(`.ep-note[data-no="${no}"]`)?.value || ''
-        };
-      });
-    }
-    async function resizeImage(file){
-      const dataUrl = await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
-      const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl; });
-      const maxW=520, maxH=780; let {width:w,height:h}=img;
-      const scale = Math.min(1,maxW/w,maxH/h); w=Math.round(w*scale); h=Math.round(h*scale);
-      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
-      const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
-      return canvas.toDataURL('image/jpeg',0.82);
-    }
-    function saveWork(e){
-      e.preventDefault();
-      const id = $('editingId').value || uid();
-      const old = state.works.find(w=>w.id===id);
-      const beforeDone = completedWorks().length;
-      const readStatus = $('readStatusInput').value;
-      const work = {
-        ...(old||{}), id,
-        title:$('titleInput').value.trim() || '無題',
-        genre:$('genreInput').value.trim(),
-        totalEpisodes:Number($('totalInput').value || 1),
-        finished:$('finishedInput').value,
-        readStatus,
-        cover: tempCover || old?.cover || '',
-        oneLine:$('oneLineInput').value.trim(),
-        insight:$('insightInput').value.trim(),
-        good:$('goodInput').value.trim(),
-        bad:$('badInput').value.trim(),
-        episodes: collectEpisodes(old?.episodes || []),
-        createdAt: old?.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        completedAt: readStatus === 'done' ? (old?.completedAt || todayStr()) : ''
-      };
-      const idx = state.works.findIndex(w=>w.id===id);
-      if(idx>=0) state.works[idx]=work; else state.works.unshift(work);
-      $('workModal').close();
-      save();
-      showToast('作品を保存しました');
-      const afterDone = completedWorks().length;
-      checkMilestone(beforeDone, afterDone);
-    }
-    function checkMilestone(before, after){
-      const beforeM = Math.floor(before/10);
-      const afterM = Math.floor(after/10);
-      if(after>0 && afterM>beforeM && after % 10 === 0){
-        petalRain();
-        showToast(`${after}作品読破！花が散りました🌸`);
-      }
-    }
-    function petalRain(){
-      const area=$('petalRain'); area.innerHTML='';
-      for(let i=0;i<46;i++){
-        const p=document.createElement('div');
-        p.className='falling-petal';
-        p.style.left = Math.random()*100 + 'vw';
-        p.style.animationDuration = (3 + Math.random()*3.4) + 's';
-        p.style.animationDelay = (Math.random()*0.8) + 's';
-        p.style.opacity = .55 + Math.random()*0.45;
-        area.appendChild(p);
-      }
-      setTimeout(()=>area.innerHTML='',7200);
-    }
-    function deleteCurrent(){
-      const id=$('editingId').value; if(!id) return;
-      if(confirm('この作品を削除しますか？')){
-        state.works = state.works.filter(w=>w.id!==id);
-        $('workModal').close(); save(); showToast('削除しました');
-      }
-    }
-    function toggleDoneInModal(){
-      $('readStatusInput').value = $('readStatusInput').value === 'done' ? 'wip' : 'done';
-      $('markDoneBtn').textContent = $('readStatusInput').value === 'done' ? '途中に戻す' : '読破済みにする';
-    }
-    function quickRead(id){
-      const w = state.works.find(x=>x.id===id); if(!w) return;
-      const ep = (w.episodes||[]).find(e=>!e.readDate);
-      if(ep){ ep.readDate = todayStr(); ep.note = ep.note || '今日読んだ'; }
-      else {
-        const next = (w.episodes||[]).length + 1;
-        w.episodes.push({number:next, readDate:todayStr(), note:'今日読んだ', tag:''});
-        w.totalEpisodes = Math.max(Number(w.totalEpisodes||0), next);
-      }
-      w.updatedAt = new Date().toISOString();
-      save(); showToast('今日読んだ話を記録しました');
-    }
-    function exportData(){
-      const blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href=url; a.download=`manga-reading-log-${todayStr()}.json`; a.click();
-      URL.revokeObjectURL(url);
-    }
-    function sampleData(){
-      if(state.works.length && !confirm('サンプル作品を追加しますか？')) return;
-      const id=uid();
-      state.works.unshift({
-        id,title:'オークの樹の下',genre:'ファンタジー・SF',cover:'',totalEpisodes:6,finished:'ongoing',readStatus:'wip',
-        oneLine:'身分差と不器用な愛を、縦スクロールの視線誘導で読ませる作品。',
-        insight:'序盤で主人公の弱さと相手の強さを対比し、感情移入と課金動機を作っている。',
-        good:'表情の寄り、沈黙、間の使い方が強く、読者が続きを見たくなる。',bad:'説明が多い場面は少し重いので、画で見せる回との緩急が鍵。',
-        episodes:[1,2,3,4,5,6].map(n=>({number:n,readDate:n<=2?todayStr():'',tag:n===1?'導入':n===2?'感情移入':'',note:n===1?'主人公の置かれた状況がすぐ分かる。':' ' })),
-        createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),completedAt:''
-      });
-      save(); showToast('サンプルを追加しました');
-    }
+
+    function openModal(work=null){ tempCover=null; const w=work?normalizeWork(work):null; $('workForm').reset(); $('editingId').value=w?.id||''; $('modalTitle').textContent=w?'作品を編集':'作品を追加'; $('titleInput').value=w?.title||''; $('genreInput').value=w?.genre||''; $('sourceTypeInput').value=w?.sourceType||'unknown'; $('totalInput').value=w?.totalEpisodes||1; $('finishedInput').value=w?.finished||'ongoing'; $('readStatusInput').value=w?.readStatus||'wip'; $('currentEpisodeInput').value=w?.currentEpisode||0; $('stickyNoteInput').value=w?.stickyNote||''; $('oneLineInput').value=w?.oneLine||''; $('insightInput').value=w?.insight||''; $('goodInput').value=w?.good||''; $('badInput').value=w?.bad||''; $('deleteWork').classList.toggle('hidden',!w); $('markDoneBtn').textContent=w?.readStatus==='done'?'途中に戻す':'読破済みにする'; $('coverHint').textContent=w?.cover?'現在の表紙あり。変更する場合だけ選択。':'未選択なら空白の表紙になります。'; buildEpisodeEditors(w?.episodes||[],Number(w?.totalEpisodes||1)); $('workModal').showModal(); }
+    function buildEpisodeEditors(existing=[],total=null){ const n=Math.max(1,Math.min(9999,Number(total??($('totalInput').value||1)))); const map=new Map(existing.map(e=>[Number(e.number),e])); $('episodeEditors').innerHTML=Array.from({length:Math.min(n,80)},(_,i)=>{ const no=i+1; const e=map.get(no)||{number:no,note:'',readDate:'',tag:''}; return `<details class="episode-editor" ${no<=3?'open':''}><summary>${no}話. (${no})</summary><div class="episode-editor-body"><div class="date-row"><div><label>読んだ日</label><input class="field ep-date" data-no="${no}" type="date" value="${escapeHtml(e.readDate||'')}"></div><div><label>ひとことタグ</label><input class="field ep-tag" data-no="${no}" value="${escapeHtml(e.tag||'')}" placeholder="例：引きが強い"></div></div><div style="margin-top:10px;"><label>感想・分析</label><textarea class="field ep-note" data-no="${no}" placeholder="この話で面白かった点、離脱しそうな点、構成の気づきなど">${escapeHtml(e.note||'')}</textarea></div></div></details>`; }).join('') + (n>80?`<div class="hint">※各話編集は80話まで表示。読書記録は全${n}話まで対応しています。</div>`:''); }
+    function collectEpisodes(old=[]){ const n=Math.max(1,Number($('totalInput').value||1)); const oldMap=new Map(old.map(e=>[Number(e.number),e])); return Array.from({length:Math.min(n,80)},(_,i)=>{ const no=i+1; return { ...(oldMap.get(no)||{}), number:no, readDate:document.querySelector(`.ep-date[data-no="${no}"]`)?.value||'', tag:document.querySelector(`.ep-tag[data-no="${no}"]`)?.value||'', note:document.querySelector(`.ep-note[data-no="${no}"]`)?.value||'' }; }); }
+    async function resizeImage(file){ const dataUrl=await new Promise((res,rej)=>{const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file);}); const img=await new Promise((res,rej)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=dataUrl;}); const maxW=520,maxH=780; let {width:w,height:h}=img; const scale=Math.min(1,maxW/w,maxH/h); w=Math.round(w*scale); h=Math.round(h*scale); const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h; canvas.getContext('2d').drawImage(img,0,0,w,h); return canvas.toDataURL('image/jpeg',0.82); }
+    function saveWork(e){ e.preventDefault(); const id=$('editingId').value||uid(); const old=state.works.find(w=>w.id===id); const before=completedWorks().length; const readStatus=$('readStatusInput').value; let episodes=collectEpisodes(old?.episodes||[]); const currentEpisode=Number($('currentEpisodeInput').value||0); episodes=episodes.map(ep=>Number(ep.number)<=currentEpisode && !ep.readDate ? {...ep,readDate:todayStr()} : ep); const work=normalizeWork({ ...(old||{}), id, title:$('titleInput').value.trim()||'無題', genre:$('genreInput').value.trim(), sourceType:$('sourceTypeInput').value, totalEpisodes:Number($('totalInput').value||1), finished:$('finishedInput').value, readStatus, currentEpisode, stickyNote:$('stickyNoteInput').value.trim(), cover:tempCover||old?.cover||'', oneLine:$('oneLineInput').value.trim(), insight:$('insightInput').value.trim(), good:$('goodInput').value.trim(), bad:$('badInput').value.trim(), episodes, readingLogs:old?.readingLogs||[], createdAt:old?.createdAt||new Date().toISOString(), updatedAt:new Date().toISOString(), completedAt:readStatus==='done'?(old?.completedAt||todayStr()):'' }); const idx=state.works.findIndex(w=>w.id===id); if(idx>=0) state.works[idx]=work; else state.works.unshift(work); $('workModal').close(); save(); showToast('作品を保存しました'); checkMilestone(before,completedWorks().length); }
+    function deleteCurrent(){ const id=$('editingId').value; if(!id) return; if(confirm('この作品を削除しますか？')){ state.works=state.works.filter(w=>w.id!==id); $('workModal').close(); save(); showToast('削除しました'); } }
+    function toggleDoneInModal(){ $('readStatusInput').value=$('readStatusInput').value==='done'?'wip':'done'; $('markDoneBtn').textContent=$('readStatusInput').value==='done'?'途中に戻す':'読破済みにする'; }
+
+    function openReadModal(workId, logId=''){ const w=getWork(workId); if(!w) return; const log=logId ? (w.readingLogs||[]).find(l=>l.id===logId) : null; $('readWorkId').value=workId; $('readLogId').value=log?.id||''; $('readModalTitle').textContent=`読書記録：${w.title||'無題'}`; $('readDateInput').value=log?.date||todayStr(); $('readCountInput').value=log?.count||1; const start=(Number(w.currentEpisode||0)+1); $('readFromInput').value=log?.from||start; $('readToInput').value=log?.to||start; $('readMemoInput').value=log?.memo||''; $('deleteReadLog').classList.toggle('hidden',!log); $('readModal').showModal(); }
+    function syncReadRange(){ const from=Number($('readFromInput').value||0); const count=Number($('readCountInput').value||0); if(from && count && document.activeElement===$('readCountInput')) $('readToInput').value=from+count-1; const to=Number($('readToInput').value||0); if(from && to && document.activeElement===$('readToInput')) $('readCountInput').value=Math.max(1,to-from+1); }
+    function saveReadLog(e){ e.preventDefault(); const workId=$('readWorkId').value; const w=getWork(workId); if(!w) return; const before=completedWorks().length; const logId=$('readLogId').value||uid(); let count=Math.max(1,Number($('readCountInput').value||1)); let from=Number($('readFromInput').value||0); let to=Number($('readToInput').value||0); if(!from) from=Number(w.currentEpisode||0)+1; if(!to) to=from+count-1; count=Math.max(1,Number(count||to-from+1)); const log={id:logId,date:$('readDateInput').value||todayStr(),count,from,to,memo:$('readMemoInput').value.trim(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}; const idx=(w.readingLogs||[]).findIndex(l=>l.id===logId); if(idx>=0) w.readingLogs[idx]={...w.readingLogs[idx],...log}; else w.readingLogs.push(log); w.currentEpisode=Math.max(Number(w.currentEpisode||0),to); w.totalEpisodes=Math.max(Number(w.totalEpisodes||1),w.currentEpisode); w.episodes=Array.isArray(w.episodes)?w.episodes:[]; for(let n=from;n<=Math.min(to,80);n++){ let ep=w.episodes.find(e=>Number(e.number)===n); if(!ep){ ep={number:n,readDate:'',tag:'',note:''}; w.episodes.push(ep); } if(!ep.readDate) ep.readDate=log.date; }
+      if(w.currentEpisode>=Number(w.totalEpisodes||1)){ w.readStatus='done'; w.completedAt=w.completedAt||log.date; } w.updatedAt=new Date().toISOString(); replaceWork(w); $('readModal').close(); save(); showToast(`${count}話分を記録しました`); checkMilestone(before,completedWorks().length); }
+    function quickRead(id,count=1){ const w=getWork(id); if(!w) return; const before=completedWorks().length; const from=Number(w.currentEpisode||0)+1; const to=from+Number(count)-1; const log={id:uid(),date:todayStr(),count:Number(count),from,to,memo:'',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}; w.readingLogs.push(log); w.currentEpisode=to; w.totalEpisodes=Math.max(Number(w.totalEpisodes||1),to); w.episodes=Array.isArray(w.episodes)?w.episodes:[]; for(let n=from;n<=Math.min(to,80);n++){ let ep=w.episodes.find(e=>Number(e.number)===n); if(!ep){ ep={number:n,readDate:'',tag:'',note:''}; w.episodes.push(ep); } if(!ep.readDate) ep.readDate=todayStr(); }
+      if(w.currentEpisode>=Number(w.totalEpisodes||1)){ w.readStatus='done'; w.completedAt=w.completedAt||todayStr(); } w.updatedAt=new Date().toISOString(); replaceWork(w); save(); showToast(`今日${count}話読んだ！`); checkMilestone(before,completedWorks().length); }
+    function deleteReadLog(){ const workId=$('readWorkId').value, logId=$('readLogId').value; const w=getWork(workId); if(!w||!logId) return; if(confirm('この読書履歴を削除しますか？')){ w.readingLogs=(w.readingLogs||[]).filter(l=>l.id!==logId); w.currentEpisode=Math.max(0,...w.readingLogs.map(l=>Number(l.to)||0),...w.episodes.filter(e=>e.readDate).map(e=>Number(e.number)||0)); w.updatedAt=new Date().toISOString(); replaceWork(w); $('readModal').close(); save(); showToast('履歴を削除しました'); } }
+
+    function exportData(){ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`manga-reading-log-${todayStr()}.json`; a.click(); URL.revokeObjectURL(url); }
+    function sampleData(){ if(state.works.length && !confirm('サンプル作品を追加しますか？')) return; const id=uid(); state.works.unshift(normalizeWork({id,title:'オークの樹の下',genre:'恋愛ファンタジー',sourceType:'novel_comicalize',cover:'',totalEpisodes:136,finished:'ongoing',readStatus:'wip',currentEpisode:6,stickyNote:'次は7話から。夫婦関係の変化を見る',oneLine:'身分差と不器用な愛を、縦スクロールの視線誘導で読ませる作品。',insight:'序盤で主人公の弱さと相手の強さを対比し、感情移入と課金動機を作っている。',good:'表情の寄り、沈黙、間の使い方が強く、読者が続きを見たくなる。',bad:'説明が多い場面は少し重いので、画で見せる回との緩急が鍵。',episodes:[1,2,3,4,5,6].map(n=>({number:n,readDate:n<=6?todayStr():'',tag:n===1?'導入':n===2?'感情移入':'',note:n===1?'主人公の置かれた状況がすぐ分かる。':''})),readingLogs:[{id:uid(),date:todayStr(),count:6,from:1,to:6,memo:'サンプル：6話分読んだ記録',createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}],createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),completedAt:''})); save(); showToast('サンプルを追加しました'); }
+    function checkMilestone(before,after){ if(after>0 && Math.floor(after/10)>Math.floor(before/10) && after%10===0){ petalRain(); showToast(`${after}作品読破！花が散りました🌸`); } }
+    function petalRain(){ const area=$('petalRain'); area.innerHTML=''; for(let i=0;i<46;i++){ const p=document.createElement('div'); p.className='falling-petal'; p.style.left=Math.random()*100+'vw'; p.style.animationDuration=(3+Math.random()*3.4)+'s'; p.style.animationDelay=(Math.random()*0.8)+'s'; p.style.opacity=.55+Math.random()*0.45; area.appendChild(p); } setTimeout(()=>area.innerHTML='',7200); }
 
     $('profileName').addEventListener('change', e=>{ state.profileName=e.target.value.trim(); save(); showToast('名前を保存しました'); });
     $('stampNow').addEventListener('click', ()=>{ ensureStamp(); render(); showToast('スタンプ獲得！'); });
-    $('openWorkModal').addEventListener('click', ()=>openModal());
-    $('closeModal').addEventListener('click', ()=>$('workModal').close());
-    $('buildEpisodes').addEventListener('click', ()=>buildEpisodeEditors(collectEpisodes(), Number($('totalInput').value||1)));
-    $('totalInput').addEventListener('change', ()=>buildEpisodeEditors(collectEpisodes(), Number($('totalInput').value||1)));
-    $('workForm').addEventListener('submit', saveWork);
-    $('deleteWork').addEventListener('click', deleteCurrent);
-    $('markDoneBtn').addEventListener('click', toggleDoneInModal);
-    $('coverInput').addEventListener('change', async e=>{
-      const file=e.target.files?.[0]; if(!file) return;
-      tempCover = await resizeImage(file);
-      $('coverHint').textContent = '表紙画像を読み込みました。保存すると反映されます。';
-    });
-    $('searchInput').addEventListener('input', renderWorks);
-    $('statusFilter').addEventListener('change', renderWorks);
-    $('works').addEventListener('click', e=>{
-      const btn = e.target.closest('button[data-action]'); if(!btn) return;
-      const id=btn.dataset.id;
-      if(btn.dataset.action==='edit') openModal(state.works.find(w=>w.id===id));
-      if(btn.dataset.action==='quickread') quickRead(id);
-    });
-    $('exportBtn').addEventListener('click', exportData);
-    $('navExport').addEventListener('click', exportData);
-    $('sampleBtn').addEventListener('click', sampleData);
-    $('importFile').addEventListener('change', async e=>{
-      const file=e.target.files?.[0]; if(!file) return;
-      try{
-        const json=JSON.parse(await file.text());
-        state={...defaultState(),...json}; save(); showToast('読み込みました');
-      }catch(err){ alert('読み込みに失敗しました。JSONファイルを確認してください。'); }
-    });
-    $('navTop').addEventListener('click', ()=>scrollTo({top:0,behavior:'smooth'}));
-    $('navSearch').addEventListener('click', ()=>$('searchInput').focus());
-    $('navAdd').addEventListener('click', ()=>openModal());
+    $('openWorkModal').addEventListener('click', ()=>openModal()); $('navAdd').addEventListener('click', ()=>openModal());
+    $('closeModal').addEventListener('click', ()=>$('workModal').close()); $('closeReadModal').addEventListener('click', ()=>$('readModal').close());
+    $('buildEpisodes').addEventListener('click', ()=>buildEpisodeEditors(collectEpisodes(),Number($('totalInput').value||1))); $('totalInput').addEventListener('change', ()=>buildEpisodeEditors(collectEpisodes(),Number($('totalInput').value||1)));
+    $('workForm').addEventListener('submit', saveWork); $('deleteWork').addEventListener('click', deleteCurrent); $('markDoneBtn').addEventListener('click', toggleDoneInModal);
+    $('coverInput').addEventListener('change', async e=>{ const file=e.target.files?.[0]; if(!file) return; tempCover=await resizeImage(file); $('coverHint').textContent='表紙画像を読み込みました。保存すると反映されます。'; });
+    $('readForm').addEventListener('submit', saveReadLog); $('deleteReadLog').addEventListener('click', deleteReadLog); $('readCountInput').addEventListener('input', syncReadRange); $('readToInput').addEventListener('input', syncReadRange);
+    ['searchInput','statusFilter','genreFilter','sourceFilter'].forEach(id=>$(id).addEventListener(id==='searchInput'?'input':'change', renderMain));
+    document.querySelectorAll('.view-tab').forEach(btn=>btn.addEventListener('click',()=>setView(btn.dataset.view)));
+    $('works').addEventListener('click', e=>{ const btn=e.target.closest('button[data-action]'); if(!btn) return; const id=btn.dataset.id; if(btn.dataset.action==='edit') openModal(state.works.find(w=>w.id===id)); if(btn.dataset.action==='quick') quickRead(id,Number(btn.dataset.count||1)); if(btn.dataset.action==='read') openReadModal(id); if(btn.dataset.action==='editlog') openReadModal(id,btn.dataset.log); });
+    $('exportBtn').addEventListener('click', exportData); $('navExport').addEventListener('click', exportData); $('sampleBtn').addEventListener('click', sampleData);
+    $('importFile').addEventListener('change', async e=>{ const file=e.target.files?.[0]; if(!file) return; try{ state={...defaultState(),...JSON.parse(await file.text())}; save(); showToast('読み込みました'); }catch(err){ alert('読み込みに失敗しました。JSONファイルを確認してください。'); } });
+    $('navShelf').addEventListener('click', ()=>setView('shelf')); $('navHistory').addEventListener('click', ()=>setView('history')); $('navSearch').addEventListener('click', ()=>{ $('searchInput').focus(); $('libraryTop').scrollIntoView({behavior:'smooth',block:'start'}); });
 
-    ensureStamp();
-    render();
-    if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+    normalizeAll(); ensureStamp(); render();
   </script>
 </body>
 </html>
